@@ -1,5 +1,6 @@
 package com.example.popcorntime.presentation.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,6 @@ import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.data.models.MoviesResponse
 import com.example.popcorntime.data.models.SortBy
 import com.example.popcorntime.data.repository.IMoviesRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -27,6 +27,7 @@ class HomeViewModel(
 
     private var _movies: MutableStateFlow<MutableList<Movie>> = MutableStateFlow(mutableListOf())
     val movies = _movies.asStateFlow()
+    private var oldList = mutableListOf<Movie>()
 
     init {
         getMovies(SortBy.Popular, Language.English)
@@ -49,7 +50,8 @@ class HomeViewModel(
 
             response.body()!!.movies?.let {
                 _state.value = UIState.Success
-                _movies.value.addAll(it)
+                oldList.addAll(it)
+                _movies.value = ArrayList(oldList)
             } ?: UIState.Failure(
                 "No Results"
             )
@@ -61,8 +63,9 @@ class HomeViewModel(
     fun loadNextPage(sortBy: SortBy, language: Language) {
         page++
         viewModelScope.launch {
-            delay(2000)
+
             getMovies(SortBy.Popular, Language.English)
+            Log.i("TAG", "loadNextPage: $page")
         }
     }
 }

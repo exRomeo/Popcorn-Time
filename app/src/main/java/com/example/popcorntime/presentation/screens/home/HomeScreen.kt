@@ -23,7 +23,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.popcorntime.PopcornTimeApplication
 import com.example.popcorntime.core.uistate.UIState
+import com.example.popcorntime.data.models.Language
 import com.example.popcorntime.data.models.Movie
+import com.example.popcorntime.data.models.SortBy
 import com.example.popcorntime.presentation.common.Error
 import com.example.popcorntime.presentation.common.HomeTopAppBar
 import com.example.popcorntime.presentation.common.LoadingHomeScreen
@@ -81,13 +83,17 @@ fun HomeScreenContent(modifier: Modifier = Modifier, navController: NavHostContr
 fun MovieGrid(navController: NavHostController, viewModel: HomeViewModel) {
     val moviesList: List<Movie> by viewModel.movies.collectAsState()
     LazyVerticalGrid(columns = GridCells.Adaptive(100.dp), contentPadding = PaddingValues(4.dp)) {
-        items(items = moviesList, key = { it.id }) {
+        items(items = moviesList) {
             MovieCard(
                 Modifier
                     .padding(4.dp)
                     .clickable {/*TODO: Navigate to Details Screen*/ },
                 movie = it
             )
+
+            if (moviesList.indexOf(it) >= moviesList.size - 1)
+                viewModel.loadNextPage(sortBy = SortBy.Popular, language = Language.English)
+
         }
     }
 }
