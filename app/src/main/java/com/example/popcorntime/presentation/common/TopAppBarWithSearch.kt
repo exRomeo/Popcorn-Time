@@ -27,17 +27,12 @@ fun HomeTopAppBar() {
         title = {
             Text(text = "Home")
         },
+
         actions = {
             if (!isExpanded)
                 IconButton(onClick = { isExpanded = !isExpanded }) {
                     Icon(Icons.Default.Search, contentDescription = "")
                 }
-            IconButton(
-                onClick = { /* do something */ }
-            ) {
-                Icon(Icons.Default.FilterList, "")
-            }
-
             if (isExpanded)
                 SearchBar(
                     query = searchQuery,
@@ -69,6 +64,12 @@ fun HomeTopAppBar() {
                         }
                     }
                 }
+            IconButton(
+                onClick = { /* do something */ }
+            ) {
+                Icon(Icons.Default.FilterList, "")
+            }
+
         }
     )
 }

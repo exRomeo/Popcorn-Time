@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class Movie(
     @field:SerializedName("adult")
     val adult: Boolean? = null,
+    @field:SerializedName("genres")
+    val genres: List<Genre>? = null,
     @field:SerializedName("backdrop_path")
     val backdropPath: String? = null,
     @field:SerializedName("genre_ids")
@@ -21,8 +23,16 @@ data class Movie(
     val popularity: Double? = null,
     @field:SerializedName("poster_path")
     val posterPath: String? = null,
+    @field:SerializedName("production_companies")
+    val productionCompanies: List<ProductionCompany>? = null,
+    @field:SerializedName("production_country")
+    val productionCountries: List<ProductionCountry>? = null,
     @field:SerializedName("release_date")
     val releaseDate: String? = null,
+    @field:SerializedName("status")
+    val status: String? = null,
+    @field:SerializedName("tagline")
+    val tagline: String? = null,
     @field:SerializedName("title")
     val title: String? = null,
     @field:SerializedName("video")
@@ -35,4 +45,30 @@ data class Movie(
     fun getPosterURL(): String =
         "https://image.tmdb.org/t/p/w500/$posterPath"
 
+    fun getBackDropURL(): String =
+        "https://image.tmdb.org/t/p/w780/$backdropPath"
+
 }
+
+data class ProductionCompany(
+    @field:SerializedName("id")
+    val id: Long? = null,
+    @field:SerializedName("logo_path")
+    val logoPath: String? = null,
+    @field:SerializedName("name")
+    val name: String? = null,
+    @field:SerializedName("origin_country")
+    val originCountry: String? = null
+)
+
+data class ProductionCountry(
+    @field:SerializedName("iso_3166_1")
+    val iso: String? = null,
+    @field:SerializedName("name")
+    val name: String? = null
+)
+
+data class Genre(
+    val id: Long? = null,
+    val name: String? = null
+)

@@ -1,5 +1,7 @@
 package com.example.popcorntime.core.helpers
 
+import com.example.popcorntime.data.models.BackDropsResponse
+import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.data.models.MoviesResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -18,5 +20,21 @@ interface MovieAPI {
         @Query("language") language: String,
         @Query("page") page: UInt
     ): Response<MoviesResponse>
+
+    @GET("movie/{movie_id}")
+    @Headers("accept: application/json")
+    suspend fun getMovie(
+        @Header("Authorization") apiKey: String,
+        @Path("movie_id") movieID: Int,
+        @Query("language") language: String
+    ): Response<Movie>
+
+    @GET("movie/{movie_id}/images")
+    @Headers("accept: application/json")
+    suspend fun getImages(
+        @Header("Authorization") apiKey: String,
+        @Path("movie_id") movieID: Int,
+        @Query("include_image_language") language: String
+    ): Response<BackDropsResponse>
 
 }

@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.popcorntime.R
 import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.ui.theme.PopcornTimeTheme
 
@@ -42,7 +41,8 @@ fun MovieCard(modifier: Modifier = Modifier, titleHeight: Dp = 40.dp, movie: Mov
         Column(modifier = Modifier.fillMaxSize()) {
             NetworkImage(
                 url = movie.getPosterURL(),
-                error = R.drawable.error_placeholder,
+                placeHolder = { PosterImagePlaceholder() },
+                error = { PosterImageError() },
                 contentDescription = "Movie Image"
             )
             Box(
@@ -106,7 +106,7 @@ fun PreviewMovieCard() {
 
 
 @Composable
-fun ShimmerMovieCard(modifier: Modifier = Modifier, brush: Brush) {
+fun MovieCardShimmer(modifier: Modifier = Modifier, brush: Brush) {
     Card(modifier) {
         Box(
             modifier = Modifier
@@ -146,7 +146,7 @@ fun ShimmeringMovieCrdPreview() {
             ) {
                 item {
                     AnimatedShimmer {
-                        ShimmerMovieCard(brush = it)
+                        MovieCardShimmer(brush = it)
                     }
                 }
             }
