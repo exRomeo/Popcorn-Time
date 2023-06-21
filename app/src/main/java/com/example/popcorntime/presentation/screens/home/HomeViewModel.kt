@@ -27,14 +27,13 @@ class HomeViewModel(
 
     private var _movies: MutableStateFlow<MutableList<Movie>> = MutableStateFlow(mutableListOf())
     val movies = _movies.asStateFlow()
-    private var oldList = mutableListOf<Movie>()
+    private var oldList = mutableSetOf<Movie>()
 
     init {
         getMovies(SortBy.Popular, Language.English)
     }
 
     fun getMovies(sortBy: SortBy, language: Language) {
-
         if (connectionUtil.isConnected())
             viewModelScope.launch {
                 val response =
@@ -45,11 +44,23 @@ class HomeViewModel(
             _state.value = UIState.NotConnected
     }
 
+    suspend fun refresh(sortBy: SortBy, language: Language) {
+        if (connectionUtil.isConnected()) {
+            _state.value = UIState.Loading
+            val response =
+                moviesRepository.getMovies(sortBy = sortBy, language = language, page = page)
+            responseHandler(response)
+            getMovies(sortBy = sortBy, language = language)
+        } else {
+            _state.value = UIState.NotConnected
+        }
+    }
+
     private fun responseHandler(response: Response<MoviesResponse>) {
         if (response.isSuccessful && response.body() != null) {
 
             response.body()!!.movies?.let {
-                _state.value = UIState.Success
+                _state.value = UIState.Success(null)
                 oldList.addAll(it)
                 _movies.value = ArrayList(oldList)
             } ?: UIState.Failure(
@@ -78,7 +89,10 @@ class HomeViewModelFactory(
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(HomeViewModel::class.java))
-            HomeViewModel(moviesRepository, connectionUtil) as T
+            HomeViewModel(
+                moviesRepository = moviesRepository,
+                connectionUtil = connectionUtil
+            ) as T
         else throw Exception("ViewModel Not Found!")
     }
 }
