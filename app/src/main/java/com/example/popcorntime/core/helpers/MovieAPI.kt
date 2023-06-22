@@ -36,4 +36,14 @@ interface MovieAPI {
         @Query("include_image_language") language: String
     ): BackDropsResponse
 
+    @GET("search/movie")
+    @Headers("accept: application/json")
+    suspend fun movieSearch(
+        @Header("Authorization") apiKey: String,
+        @Query("query") query: String,
+        @Query("include_adult") include_adult: Boolean,
+        @Query("language") language: String,
+        @Query("page") page: UInt
+    ): MoviesResponse
+
 }

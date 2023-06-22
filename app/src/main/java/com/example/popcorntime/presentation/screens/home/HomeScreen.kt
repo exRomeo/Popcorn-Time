@@ -1,5 +1,6 @@
 package com.example.popcorntime.presentation.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -25,22 +25,31 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.example.popcorntime.PopcornTimeApplication
+import com.example.popcorntime.R
 import com.example.popcorntime.core.navigation.Screens
-import com.example.popcorntime.core.uistate.UIState
-import com.example.popcorntime.data.models.Language
+import com.example.popcorntime.core.state.SearchWidgetState
+import com.example.popcorntime.core.state.UIState
 import com.example.popcorntime.data.models.Movie
-import com.example.popcorntime.data.models.SortBy
+import com.example.popcorntime.presentation.common.AnimatedShimmer
 import com.example.popcorntime.presentation.common.Error
-import com.example.popcorntime.presentation.common.HomeTopAppBar
 import com.example.popcorntime.presentation.common.LoadingHomeScreen
+import com.example.popcorntime.presentation.common.MainAppBar
 import com.example.popcorntime.presentation.common.MovieCard
+import com.example.popcorntime.presentation.common.MovieCardPlaceholder
 import com.example.popcorntime.presentation.common.NoNetwork
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,7 +60,27 @@ fun HomeScreen(navController: NavHostController) {
             connectionUtil = (LocalContext.current.applicationContext as PopcornTimeApplication).connectionUtil
         )
     )
-    Scaffold(topBar = { HomeTopAppBar() }) {
+
+    val searchWidgetState by viewModel.searchWidgetState
+    val searchTextState by viewModel.searchTextState
+
+    Scaffold(topBar = {
+        MainAppBar(
+            searchWidgetState = searchWidgetState,
+            searchTextState = searchTextState,
+            onTextChange = { viewModel.updateSearchTextState(newValue = it) },
+            onCloseClicked = {
+                viewModel.updateSearchTextState(newValue = "")
+                viewModel.updateSearchWidgetState(newValue = SearchWidgetState.Closed)
+            },
+            onSearchClicked = { Log.i("TAG", "HomeScreen: $it") },
+            onSearchTriggered = { viewModel.updateSearchWidgetState(SearchWidgetState.Opened) },
+            onFilterClicked = {
+                viewModel.filter = it
+                viewModel.getMovies()
+            }
+        )
+    }) {
 
         HomeScreenContent(
             modifier =
@@ -82,7 +111,7 @@ fun HomeScreenContent(
 
         fun refresh() = refreshScope.launch {
             refreshing = true
-            viewModel.refresh(SortBy.Popular, Language.English)
+            viewModel.getMovies()
             refreshing = false
         }
 
@@ -92,54 +121,78 @@ fun HomeScreenContent(
                 .fillMaxSize()
                 .pullRefresh(refreshState)
         ) {
-            if (!refreshing)
-                when (state) {
-                    is UIState.Loading -> {
-                        LoadingHomeScreen()
-                    }
-
-                    is UIState.NotConnected -> {
-                        NoNetwork()
-                    }
-
-                    is UIState.Success<*> -> {
-                        val movies: List<Movie> = (state as UIState.Success<*>).data as List<Movie>
-                        MovieGrid(
-                            navController = navController,
-                            list = movies,
-                            viewModel = viewModel
-                        )
-                    }
-
-                    is UIState.Failure -> {
-                        val message = (state as UIState.Failure).message
-                        Error(message)
-                    }
+            when (state) {
+                is UIState.Loading -> {
+                    LoadingHomeScreen()
                 }
+
+                is UIState.NotConnected -> {
+                    NoNetwork()
+                }
+
+                is UIState.Success<*> -> {
+                    val movies: Flow<PagingData<Movie>> =
+                        (state as UIState.Success<*>).data as Flow<PagingData<Movie>>
+                    MovieGrid(
+                        navController = navController,
+                        list = movies,
+                        viewModel = viewModel
+                    )
+                }
+
+                is UIState.Failure -> {
+                    val message = (state as UIState.Failure).message
+                    Error(message)
+                }
+            }
             PullRefreshIndicator(refreshing, refreshState, Modifier.align(Alignment.TopCenter))
         }
-
-
     }
 }
 
 @Composable
-fun MovieGrid(navController: NavHostController, list: List<Movie>, viewModel: HomeViewModel) {
-
+fun MovieGrid(
+    navController: NavHostController,
+    list: Flow<PagingData<Movie>>,
+    viewModel: HomeViewModel
+) {
+    val movies = list.collectAsLazyPagingItems()
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),
         columns = GridCells.Adaptive(100.dp),
         contentPadding = PaddingValues(4.dp),
     ) {
-        items(items = list) {
+        items(movies.itemCount, key = movies.itemKey { it.id }) {
             MovieCard(
                 Modifier
                     .padding(4.dp)
-                    .clickable { navController.navigate(Screens.Details.route + "/${it.id}") },
-                movie = it
+                    .clickable { navController.navigate(Screens.Details.route + "/${movies[it]!!.id}") },
+                movie = movies[it]!!
             )
+        }
+        item {
+            when (movies.loadState.append) {
+                is LoadState.Error -> {
+                    MovieCardPlaceholder(
+                        Modifier
+                            .padding(4.dp),
+                        stringResource(id = R.string.not_connected),
+                        animation = R.raw.no_connection
+                    )
+                }
 
+                LoadState.Loading -> {
+                    AnimatedShimmer {
+                        MovieCardPlaceholder(
+                            Modifier
+                                .padding(4.dp), brush = it
+                        )
+                    }
+                }
+
+                is LoadState.NotLoading -> Unit
+            }
         }
     }
 }
@@ -147,11 +200,11 @@ fun MovieGrid(navController: NavHostController, list: List<Movie>, viewModel: Ho
 @Preview(showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    Scaffold(topBar = { HomeTopAppBar() }) {
+    Scaffold(topBar = { }) {
         Column(Modifier.padding(it)) {
             MovieGrid(
                 rememberNavController(),
-                listOf(),
+                flow { },
                 HomeViewModel(
                     moviesRepository = (LocalContext.current.applicationContext as PopcornTimeApplication).moviesRepository,
                     connectionUtil = (LocalContext.current.applicationContext as PopcornTimeApplication).connectionUtil
