@@ -1,6 +1,5 @@
 package com.example.popcorntime.presentation.screens.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -8,13 +7,11 @@ import com.example.popcorntime.core.uistate.UIState
 import com.example.popcorntime.core.utils.ConnectionUtil
 import com.example.popcorntime.data.models.Language
 import com.example.popcorntime.data.models.Movie
-import com.example.popcorntime.data.models.MoviesResponse
 import com.example.popcorntime.data.models.SortBy
 import com.example.popcorntime.data.repository.IMoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class HomeViewModel(
     private val moviesRepository: IMoviesRepository,
@@ -27,7 +24,6 @@ class HomeViewModel(
 
     private var _movies: MutableStateFlow<MutableList<Movie>> = MutableStateFlow(mutableListOf())
     val movies = _movies.asStateFlow()
-    private var oldList = mutableSetOf<Movie>()
 
     init {
         getMovies(SortBy.Popular, Language.English)
@@ -36,49 +32,40 @@ class HomeViewModel(
     fun getMovies(sortBy: SortBy, language: Language) {
         if (connectionUtil.isConnected())
             viewModelScope.launch {
-                val response =
-                    moviesRepository.getMovies(sortBy = sortBy, language = language, page = page)
-                responseHandler(response)
+                try {
+                    val response =
+                        moviesRepository.getMovies(
+                            sortBy = sortBy,
+                            language = language,
+                            page = page
+                        )
+                    _state.value = UIState.Success(response.movies)
+                } catch (exception: Exception) {
+                    _state.value =
+                        UIState.Failure(exception.localizedMessage ?: "Something went Wrong")
+                }
             }
         else
             _state.value = UIState.NotConnected
     }
 
-    suspend fun refresh(sortBy: SortBy, language: Language) {
+    fun refresh(sortBy: SortBy, language: Language) {
         if (connectionUtil.isConnected()) {
             _state.value = UIState.Loading
-            val response =
-                moviesRepository.getMovies(sortBy = sortBy, language = language, page = page)
-            responseHandler(response)
-            getMovies(sortBy = sortBy, language = language)
+            getMovies(sortBy, language)
         } else {
             _state.value = UIState.NotConnected
         }
     }
 
-    private fun responseHandler(response: Response<MoviesResponse>) {
-        if (response.isSuccessful && response.body() != null) {
-
-            response.body()!!.movies?.let {
-                _state.value = UIState.Success(null)
-                oldList.addAll(it)
-                _movies.value = ArrayList(oldList)
-            } ?: UIState.Failure(
-                "No Results"
-            )
-        } else {
-            _state.value = UIState.Failure(response.errorBody().toString())
-        }
-    }
-
-    fun loadNextPage(sortBy: SortBy, language: Language) {
-        page++
-        viewModelScope.launch {
-
-            getMovies(SortBy.Popular, Language.English)
-            Log.i("TAG", "loadNextPage: $page")
-        }
-    }
+//    fun loadNextPage(sortBy: SortBy, language: Language) {
+//        page++
+//        viewModelScope.launch {
+//
+//            getMovies(SortBy.Popular, Language.English)
+//            Log.i("TAG", "loading page number: $page")
+//        }
+//    }
 }
 
 

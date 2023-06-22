@@ -102,8 +102,13 @@ fun HomeScreenContent(
                         NoNetwork()
                     }
 
-                    is UIState.Success -> {
-                        MovieGrid(navController = navController, viewModel = viewModel)
+                    is UIState.Success<*> -> {
+                        val movies: List<Movie> = (state as UIState.Success<*>).data as List<Movie>
+                        MovieGrid(
+                            navController = navController,
+                            list = movies,
+                            viewModel = viewModel
+                        )
                     }
 
                     is UIState.Failure -> {
@@ -119,25 +124,21 @@ fun HomeScreenContent(
 }
 
 @Composable
-fun MovieGrid(navController: NavHostController, viewModel: HomeViewModel) {
+fun MovieGrid(navController: NavHostController, list: List<Movie>, viewModel: HomeViewModel) {
 
-    val moviesList: List<Movie> by viewModel.movies.collectAsState()
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),
         columns = GridCells.Adaptive(100.dp),
         contentPadding = PaddingValues(4.dp),
     ) {
-        items(items = moviesList) {
+        items(items = list) {
             MovieCard(
                 Modifier
                     .padding(4.dp)
                     .clickable { navController.navigate(Screens.Details.route + "/${it.id}") },
                 movie = it
             )
-
-            if (moviesList.indexOf(it) >= moviesList.size - 1)
-                viewModel.loadNextPage(sortBy = SortBy.Popular, language = Language.English)
 
         }
     }
@@ -150,6 +151,7 @@ fun HomeScreenPreview() {
         Column(Modifier.padding(it)) {
             MovieGrid(
                 rememberNavController(),
+                listOf(),
                 HomeViewModel(
                     moviesRepository = (LocalContext.current.applicationContext as PopcornTimeApplication).moviesRepository,
                     connectionUtil = (LocalContext.current.applicationContext as PopcornTimeApplication).connectionUtil

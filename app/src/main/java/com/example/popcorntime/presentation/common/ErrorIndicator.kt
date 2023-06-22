@@ -3,6 +3,7 @@ package com.example.popcorntime.presentation.common
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +18,7 @@ fun Error(message: String) {
 
 @Composable
 fun NoNetwork() {
-    LazyColumn() {
+    LazyColumn(Modifier.fillMaxSize()) {
         item {
             Text(text = "NO INTERNET\n CHECK CONNECTION")
         }

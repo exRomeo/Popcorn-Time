@@ -6,14 +6,13 @@ import com.example.popcorntime.data.models.Language
 import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.data.models.MoviesResponse
 import com.example.popcorntime.data.models.SortBy
-import retrofit2.Response
 
 class MoviesRepository(private val moviesSource: IMoviesSource) : IMoviesRepository {
     override suspend fun getMovies(
         sortBy: SortBy,
         language: Language,
         page: Int
-    ): Response<MoviesResponse> =
+    ): MoviesResponse =
         moviesSource.getMovies(
             sortBy = sortBy.value,
             language = language.value,
@@ -23,7 +22,7 @@ class MoviesRepository(private val moviesSource: IMoviesSource) : IMoviesReposit
     override suspend fun getMovie(
         movieID: Int,
         language: Language
-    ): Response<Movie> =
+    ): Movie =
         moviesSource.getMovie(
             movieID = movieID,
             language = language.value
@@ -32,7 +31,7 @@ class MoviesRepository(private val moviesSource: IMoviesSource) : IMoviesReposit
     override suspend fun getImages(
         movieID: Int,
         language: Language
-    ): Response<BackDropsResponse> =
+    ): BackDropsResponse =
         moviesSource.getImages(
             movieID = movieID,
             language = language.value
