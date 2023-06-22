@@ -27,7 +27,7 @@ fun LoadingHomeScreen() {
     LazyVerticalGrid(columns = GridCells.Adaptive(100.dp), contentPadding = PaddingValues(4.dp)) {
         items(12) {
             AnimatedShimmer {
-                MovieCardShimmer(
+                MovieCardPlaceholder(
                     Modifier
                         .padding(4.dp), brush = it
                 )

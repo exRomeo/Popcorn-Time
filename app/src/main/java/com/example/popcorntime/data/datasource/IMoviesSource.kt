@@ -8,5 +8,9 @@ interface IMoviesSource {
     suspend fun getMovies(sortBy: String, language: String, page: UInt): MoviesResponse
     suspend fun getMovie(movieID: Int, language: String): Movie
     suspend fun getImages(movieID: Int, language: String): BackDropsResponse
-
+    suspend fun movieSearch(
+        query: String,
+        language: String,
+        page: UInt
+    ): MoviesResponse
 }

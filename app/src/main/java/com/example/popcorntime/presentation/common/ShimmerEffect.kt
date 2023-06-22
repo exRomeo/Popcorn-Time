@@ -1,7 +1,7 @@
 package com.example.popcorntime.presentation.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 fun AnimatedShimmer(content: @Composable (Brush) -> Unit) {
     val shimmerColors = listOf(
         Color.LightGray.copy(alpha = 0.8f),
-        Color.LightGray.copy(alpha = 0.3f),
+        Color.LightGray.copy(alpha = 0.2f),
         Color.LightGray.copy(alpha = 0.8f),
     )
 
@@ -41,11 +41,11 @@ fun AnimatedShimmer(content: @Composable (Brush) -> Unit) {
 
     val translateAnim = transition.animateFloat(
         initialValue = 0f,
-        targetValue = 1000f,
+        targetValue = 5000f,
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = 1000,
-                easing = FastOutSlowInEasing
+                easing = EaseInOut /*FastOutSlowInEasing*/
             ),
             repeatMode = RepeatMode.Restart
         )

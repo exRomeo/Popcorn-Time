@@ -40,4 +40,17 @@ class MoviesSource(private val movieAPI: MovieAPI) : IMoviesSource {
             language = language
         )
 
+    override suspend fun movieSearch(
+        query: String,
+        language: String,
+        page: UInt
+    ): MoviesResponse =
+        movieAPI.movieSearch(
+            apiKey = BuildConfig.APIKEY,
+            query = query,
+            include_adult = false,
+            language = language,
+            page = page
+        )
+
 }

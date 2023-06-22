@@ -1,4 +1,4 @@
-package com.example.popcorntime.core.uistate
+package com.example.popcorntime.core.state
 
 sealed class UIState {
     object Loading : UIState()

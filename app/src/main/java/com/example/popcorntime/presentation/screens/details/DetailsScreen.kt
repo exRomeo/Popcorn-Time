@@ -1,5 +1,6 @@
 package com.example.popcorntime.presentation.screens.details
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -63,14 +64,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.popcorntime.PopcornTimeApplication
 import com.example.popcorntime.R
-import com.example.popcorntime.core.uistate.UIState
+import com.example.popcorntime.core.state.UIState
 import com.example.popcorntime.data.models.Backdrop
 import com.example.popcorntime.data.models.Genre
-import com.example.popcorntime.data.models.Language
+import com.example.popcorntime.core.state.Language
 import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.presentation.common.AnimatedShimmer
 import com.example.popcorntime.presentation.common.Error
 import com.example.popcorntime.presentation.common.LoadingDetailsScreenPreview
+import com.example.popcorntime.presentation.common.LockScreenOrientation
 import com.example.popcorntime.presentation.common.NetworkImage
 import com.example.popcorntime.presentation.common.NoNetwork
 import kotlinx.coroutines.launch
@@ -78,7 +80,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(navController: NavHostController, movieID: Int) {
-
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
             Text(
@@ -127,9 +129,9 @@ fun DetailsScreenContent(
 
     val refreshState = rememberPullRefreshState(refreshing, ::refresh)
     Box(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .pullRefresh(refreshState),
+        modifier = modifier.fillMaxWidth()
+            .pullRefresh(refreshState)
+            .verticalScroll(rememberScrollState()),
     ) {
 
         DetailsState(modifier = Modifier, viewModel = viewModel)

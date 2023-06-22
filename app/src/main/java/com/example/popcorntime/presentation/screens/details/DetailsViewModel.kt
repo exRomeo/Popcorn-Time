@@ -3,10 +3,10 @@ package com.example.popcorntime.presentation.screens.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.popcorntime.core.uistate.UIState
+import com.example.popcorntime.core.state.Language
+import com.example.popcorntime.core.state.UIState
 import com.example.popcorntime.core.utils.ConnectionUtil
 import com.example.popcorntime.data.models.Backdrop
-import com.example.popcorntime.data.models.Language
 import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.data.repository.IMoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +25,8 @@ class DetailsViewModel(
     val images = _images.asStateFlow()
     private var movieBackDrop: String? = null
     fun getMovie(movieID: Int, language: Language) {
+        _movie.value = UIState.Loading
+        _images.value = UIState.Loading
         if (connectionUtil.isConnected())
             viewModelScope.launch {
                 getImages(

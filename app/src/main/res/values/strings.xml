@@ -9,4 +9,11 @@
     <string name="date">Date</string>
     <string name="language">Language</string>
     <string name="status">Status</string>
+    <string name="sort_by">Sort By</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="not_connected">No Internet Connection.</string>
+    <string name="close">Close</string>
+    <string name="search">Search</string>
+    <string name="search_here">Search Here…</string>
 </resources>
