@@ -45,8 +45,7 @@ data class Movie(
     fun getPosterURL(): String =
         "https://image.tmdb.org/t/p/w500/$posterPath"
 
-    fun getBackDropURL(): String =
-        "https://image.tmdb.org/t/p/w780/$backdropPath"
+    fun getVoteAverage(): Float = ((voteAverage?.times(10))?.toInt() ?: 0) / 10f
 
 }
 

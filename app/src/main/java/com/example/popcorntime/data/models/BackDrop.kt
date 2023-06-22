@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class BackDropsResponse(
     @field:SerializedName("backdrops")
-    val backdrops: List<Backdrop>? = null,
+    val backdrops: MutableList<Backdrop>? = null,
     @field:SerializedName("id")
     val id: Long? = null,
     @field:SerializedName("posters")
