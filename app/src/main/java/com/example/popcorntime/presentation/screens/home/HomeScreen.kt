@@ -1,6 +1,7 @@
+
+
 package com.example.popcorntime.presentation.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -62,7 +63,7 @@ fun HomeScreen(navController: NavHostController) {
     )
 
     val searchWidgetState by viewModel.searchWidgetState
-    val searchTextState by viewModel.searchTextState
+    val searchTextState by viewModel.searchTextState.collectAsState()
 
     Scaffold(topBar = {
         MainAppBar(
@@ -73,7 +74,7 @@ fun HomeScreen(navController: NavHostController) {
                 viewModel.updateSearchTextState(newValue = "")
                 viewModel.updateSearchWidgetState(newValue = SearchWidgetState.Closed)
             },
-            onSearchClicked = { Log.i("TAG", "HomeScreen: $it") },
+            onSearchClicked = { viewModel.movieSearch(it) },
             onSearchTriggered = { viewModel.updateSearchWidgetState(SearchWidgetState.Opened) },
             onFilterClicked = {
                 viewModel.filter = it
@@ -110,9 +111,7 @@ fun HomeScreenContent(
         var refreshing by remember { mutableStateOf(false) }
 
         fun refresh() = refreshScope.launch {
-            refreshing = true
-            viewModel.getMovies()
-            refreshing = false
+            viewModel.refresh()
         }
 
         val refreshState = rememberPullRefreshState(refreshing, ::refresh)
@@ -123,26 +122,28 @@ fun HomeScreenContent(
         ) {
             when (state) {
                 is UIState.Loading -> {
+                    refreshing = true
                     LoadingHomeScreen()
                 }
 
                 is UIState.NotConnected -> {
-                    NoNetwork()
+                    NoNetwork(R.raw.no_internet_connection)
                 }
 
                 is UIState.Success<*> -> {
+                    refreshing = false
+                    @Suppress("UNCHECKED_CAST")
                     val movies: Flow<PagingData<Movie>> =
                         (state as UIState.Success<*>).data as Flow<PagingData<Movie>>
                     MovieGrid(
                         navController = navController,
-                        list = movies,
-                        viewModel = viewModel
+                        list = movies
                     )
                 }
 
                 is UIState.Failure -> {
                     val message = (state as UIState.Failure).message
-                    Error(message)
+                    Error(message, R.raw.error)
                 }
             }
             PullRefreshIndicator(refreshing, refreshState, Modifier.align(Alignment.TopCenter))
@@ -153,8 +154,7 @@ fun HomeScreenContent(
 @Composable
 fun MovieGrid(
     navController: NavHostController,
-    list: Flow<PagingData<Movie>>,
-    viewModel: HomeViewModel
+    list: Flow<PagingData<Movie>>
 ) {
     val movies = list.collectAsLazyPagingItems()
     LazyVerticalGrid(
@@ -178,7 +178,7 @@ fun MovieGrid(
                         Modifier
                             .padding(4.dp),
                         stringResource(id = R.string.not_connected),
-                        animation = R.raw.no_connection
+                        animation = R.raw.no_internet_connection
                     )
                 }
 
@@ -204,11 +204,7 @@ fun HomeScreenPreview() {
         Column(Modifier.padding(it)) {
             MovieGrid(
                 rememberNavController(),
-                flow { },
-                HomeViewModel(
-                    moviesRepository = (LocalContext.current.applicationContext as PopcornTimeApplication).moviesRepository,
-                    connectionUtil = (LocalContext.current.applicationContext as PopcornTimeApplication).connectionUtil
-                )
+                flow { }
             )
         }
     }

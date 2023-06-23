@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -58,15 +59,14 @@ fun PosterImagePlaceholder() {
 @Preview(showSystemUi = true)
 @Composable
 fun LoadingDetailsScreenPreview() {
-    Scaffold() {
-
-        LoadingDetainScreen(Modifier.padding(it))
+    Scaffold {
+        LoadingDetailScreen(Modifier.padding(it))
     }
 }
 
 @Composable
-fun LoadingDetainScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.Top) {
+fun LoadingDetailScreen(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
         AnimatedShimmer {
             Box(
                 modifier = Modifier

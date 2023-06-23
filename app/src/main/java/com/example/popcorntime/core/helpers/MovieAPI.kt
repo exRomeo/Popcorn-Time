@@ -12,7 +12,7 @@ import retrofit2.http.Query
 interface MovieAPI {
 
     @GET("movie/{sort_by}")
-    @Headers("accept: application/json")
+    @Headers("accept: application/json", "Cache-Control: max-age=3600")
     suspend fun getMovies(
         @Header("Authorization") apiKey: String,
         @Path("sort_by") sortBy: String,
@@ -21,7 +21,7 @@ interface MovieAPI {
     ): MoviesResponse
 
     @GET("movie/{movie_id}")
-    @Headers("accept: application/json")
+    @Headers("accept: application/json", "Cache-Control: max-age=3600")
     suspend fun getMovie(
         @Header("Authorization") apiKey: String,
         @Path("movie_id") movieID: Int,
@@ -29,7 +29,7 @@ interface MovieAPI {
     ): Movie
 
     @GET("movie/{movie_id}/images")
-    @Headers("accept: application/json")
+    @Headers("accept: application/json", "Cache-Control: max-age=3600")
     suspend fun getImages(
         @Header("Authorization") apiKey: String,
         @Path("movie_id") movieID: Int,
@@ -37,7 +37,7 @@ interface MovieAPI {
     ): BackDropsResponse
 
     @GET("search/movie")
-    @Headers("accept: application/json")
+    @Headers("accept: application/json", "Cache-Control: max-age=3600")
     suspend fun movieSearch(
         @Header("Authorization") apiKey: String,
         @Query("query") query: String,

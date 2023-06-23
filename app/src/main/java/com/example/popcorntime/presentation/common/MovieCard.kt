@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,7 +51,7 @@ fun MovieCard(modifier: Modifier = Modifier, titleHeight: Dp = 40.dp, movie: Mov
                 url = movie.getPosterURL(),
                 placeHolder = { PosterImagePlaceholder() },
                 error = { PosterImageError() },
-                contentDescription = "Movie Image"
+                contentDescription = stringResource(id = R.string.movie_image)
             )
             Box(
                 modifier = Modifier
