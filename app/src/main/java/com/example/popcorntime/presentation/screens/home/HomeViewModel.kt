@@ -1,5 +1,6 @@
 package com.example.popcorntime.presentation.screens.home
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +20,14 @@ import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.data.pagingsource.MoviePagingSource
 import com.example.popcorntime.data.pagingsource.MovieSearchPagingSource
 import com.example.popcorntime.data.repository.IMoviesRepository
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -36,14 +42,17 @@ class HomeViewModel(
         mutableStateOf(value = SearchWidgetState.Closed)
     val searchWidgetState: State<SearchWidgetState> = _searchWidgetState
 
-    private val _searchTextState: MutableState<String> = mutableStateOf(value = "")
-    val searchTextState: State<String> = _searchTextState
+    private val _searchTextState: MutableStateFlow<String> = MutableStateFlow("")
+    val searchTextState = _searchTextState.asStateFlow()
 
     var filter: SortBy = SortBy.Popular
     var language: Language = Language.English
+    var isSearching = false
+
 
     init {
         getMovies()
+        observeSearchText()
     }
 
     fun getMovies() {
@@ -61,12 +70,39 @@ class HomeViewModel(
             _state.value = UIState.NotConnected
     }
 
-    fun updateSearchWidgetState(newValue: SearchWidgetState) {
-        _searchWidgetState.value = newValue
+    fun refresh() {
+        if (!isSearching)
+            getMovies()
+        else
+            movieSearch(searchTextState.value)
     }
 
+    fun updateSearchWidgetState(newValue: SearchWidgetState) {
+        _searchWidgetState.value = newValue
+        if (newValue == SearchWidgetState.Closed && isSearching) {
+            isSearching = false
+            getMovies()
+        }
+    }
+
+    @OptIn(FlowPreview::class)
     fun updateSearchTextState(newValue: String) {
         _searchTextState.value = newValue
+
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun observeSearchText() {
+        viewModelScope.launch {
+            searchTextState.filter { it.isNotBlank() }
+                .distinctUntilChanged()
+                .debounce(1000)
+                .collectLatest {
+                    Log.i("TAG", "updateSearchTextState: it is ->$it<-")
+                    isSearching = true
+                    movieSearch(it)
+                }
+        }
     }
 
     fun movieSearch(query: String) {
@@ -90,6 +126,7 @@ class HomeViewModel(
 }
 
 
+@Suppress("UNCHECKED_CAST")
 class HomeViewModelFactory(
     private val moviesRepository: IMoviesRepository,
     private val connectionUtil: ConnectionUtil

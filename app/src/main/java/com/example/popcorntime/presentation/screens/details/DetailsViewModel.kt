@@ -23,46 +23,42 @@ class DetailsViewModel(
 
     private var _images: MutableStateFlow<UIState> = MutableStateFlow(UIState.Loading)
     val images = _images.asStateFlow()
-    private var movieBackDrop: String? = null
     fun getMovie(movieID: Int, language: Language) {
         _movie.value = UIState.Loading
         _images.value = UIState.Loading
         if (connectionUtil.isConnected())
             viewModelScope.launch {
-                getImages(
-                    movieID = movieID,
-                    language = language
-                )
-
                 try {
+
+                    val images = moviesRepository.getImages(
+                        movieID = movieID,
+                        language = language
+                    )
+
                     val movie: Movie = moviesRepository.getMovie(
                         movieID = movieID,
                         language = language
                     )
-                    movie.backdropPath?.let { movieBackDrop = it }
+
+                    movie.backdropPath?.let { images.backdrops?.add(Backdrop(filePath = it)) }
+
+                    _images.value = UIState.Success(images.backdrops)
+
                     _movie.value = UIState.Success(movie)
+
                 } catch (exception: Exception) {
                     _movie.value =
                         UIState.Failure(exception.localizedMessage ?: "Something went wrong")
+                    _images.value =
+                        UIState.Failure(exception.localizedMessage ?: "Something went wrong")
                 }
             }
-    }
-
-
-    private suspend fun getImages(movieID: Int, language: Language) {
-        try {
-            val images = moviesRepository.getImages(
-                movieID = movieID,
-                language = language
-            )
-            movieBackDrop?.let { images.backdrops?.add(Backdrop(filePath = it)) }
-            _images.value = UIState.Success(images.backdrops)
-        } catch (exception: Exception) {
-            _images.value = UIState.Failure(exception.localizedMessage ?: "Something went wrong")
-        }
+        else
+            _movie.value = UIState.NotConnected
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 class DetailsViewModelFactory(
     private val moviesRepository: IMoviesRepository,
     private val connectionUtil: ConnectionUtil

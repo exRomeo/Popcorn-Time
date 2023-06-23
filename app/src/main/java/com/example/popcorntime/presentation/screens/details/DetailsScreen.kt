@@ -1,3 +1,5 @@
+
+
 package com.example.popcorntime.presentation.screens.details
 
 import android.content.pm.ActivityInfo
@@ -64,12 +66,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.popcorntime.PopcornTimeApplication
 import com.example.popcorntime.R
+import com.example.popcorntime.core.state.Language
 import com.example.popcorntime.core.state.UIState
 import com.example.popcorntime.data.models.Backdrop
 import com.example.popcorntime.data.models.Genre
-import com.example.popcorntime.core.state.Language
 import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.presentation.common.AnimatedShimmer
+import com.example.popcorntime.presentation.common.BackDropImageError
 import com.example.popcorntime.presentation.common.Error
 import com.example.popcorntime.presentation.common.LoadingDetailsScreenPreview
 import com.example.popcorntime.presentation.common.LockScreenOrientation
@@ -97,7 +100,6 @@ fun DetailsScreen(navController: NavHostController, movieID: Int) {
 
         DetailsScreenContent(
             modifier = Modifier.padding(it),
-            navController = navController,
             movieID = movieID
         )
     }
@@ -107,7 +109,6 @@ fun DetailsScreen(navController: NavHostController, movieID: Int) {
 @Composable
 fun DetailsScreenContent(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     movieID: Int
 ) {
     val viewModel: DetailsViewModel = viewModel(
@@ -129,9 +130,9 @@ fun DetailsScreenContent(
 
     val refreshState = rememberPullRefreshState(refreshing, ::refresh)
     Box(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .pullRefresh(refreshState)
-            .verticalScroll(rememberScrollState()),
     ) {
 
         DetailsState(modifier = Modifier, viewModel = viewModel)
@@ -144,23 +145,27 @@ fun DetailsScreenContent(
 fun DetailsState(modifier: Modifier = Modifier, viewModel: DetailsViewModel) {
     val imagesState by viewModel.images.collectAsState()
     val state by viewModel.movie.collectAsState()
-    when {
-        state is UIState.Loading || imagesState is UIState.Loading -> {
+    when (state) {
+        is UIState.Loading -> {
             LoadingDetailsScreenPreview()
         }
 
-        state is UIState.NotConnected || imagesState is UIState.NotConnected
-        -> {
-            NoNetwork()
+        is UIState.NotConnected -> {
+            NoNetwork(R.raw.no_internet_connection)
         }
 
-        state is UIState.Success<*> && imagesState is UIState.Success<*> -> {
+        is UIState.Success<*> -> {
 
+            @Suppress("UNCHECKED_CAST")
             val images: MutableList<Backdrop> =
                 (imagesState as UIState.Success<*>).data as MutableList<Backdrop>
 
             val movie: Movie = (state as UIState.Success<*>).data as Movie
-            Column() {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
                 ImagesSection(
                     modifier = modifier,
                     images = images
@@ -172,9 +177,9 @@ fun DetailsState(modifier: Modifier = Modifier, viewModel: DetailsViewModel) {
             }
         }
 
-        state is UIState.Failure || imagesState is UIState.Failure -> {
-            val message = (imagesState as UIState.Failure).message
-            Error(message)
+        is UIState.Failure -> {
+            val message = (state as UIState.Failure).message
+            Error(message, R.raw.error)
         }
     }
 }
@@ -212,7 +217,7 @@ fun ImagesSection(modifier: Modifier = Modifier, images: List<Backdrop>) {
                                 )
                             }
                         },
-                        error = { /*TODO*/ },
+                        error = { BackDropImageError() },
                         contentDescription = "Movie Images"
                     )
                 }
@@ -242,7 +247,10 @@ fun DetailsSection(modifier: Modifier = Modifier, movie: Movie) {
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            CircleWithPercentage(percentage = movie.getVoteAverage(), "Average")
+            CircleWithPercentage(
+                percentage = movie.getVoteAverage(),
+                stringResource(id = R.string.average)
+            )
 
             DataItem(
                 title = stringResource(R.string.vote),
