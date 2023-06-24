@@ -1,5 +1,3 @@
-
-
 package com.example.popcorntime.presentation.screens.details
 
 import android.content.pm.ActivityInfo
@@ -10,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -239,46 +236,52 @@ fun DetailsSection(modifier: Modifier = Modifier, movie: Movie) {
 
         GenreChips(movie.genres ?: listOf())
 
-        Row(
+        LazyRow(
             modifier = Modifier
-                .padding(vertical = 8.dp)
+//                .padding(vertical = 8.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
         ) {
-
-            CircleWithPercentage(
-                percentage = movie.getVoteAverage(),
-                stringResource(id = R.string.average)
-            )
-
-            DataItem(
-                title = stringResource(R.string.vote),
-                data = movie.voteCount.toString(),
-                imageVector = Icons.Default.BarChart,
-                contentDescription = stringResource(R.string.vote)
-            )
-
-            DataItem(
-                title = stringResource(R.string.language),
-                data = movie.originalLanguage ?: "N/A",
-                imageVector = Icons.Default.Language,
-                contentDescription = stringResource(R.string.language)
-            )
-
-            DataItem(
-                title = stringResource(R.string.status),
-                data = movie.status ?: "N/A",
-                imageVector = Icons.Default.NewReleases,
-                contentDescription = stringResource(R.string.status)
-            )
-
-            DataItem(
-                title = stringResource(R.string.date),
-                data = movie.releaseDate ?: "N/A",
-                imageVector = Icons.Default.DateRange,
-                contentDescription = stringResource(R.string.date)
-            )
+            item {
+                CircleWithPercentage(
+                    percentage = movie.getVoteAverage(),
+                    stringResource(id = R.string.average)
+                )
+            }
+            item {
+                DataItem(
+                    title = stringResource(R.string.vote),
+                    data = movie.voteCount.toString(),
+                    imageVector = Icons.Default.BarChart,
+                    contentDescription = stringResource(R.string.vote)
+                )
+            }
+            item {
+                DataItem(
+                    title = stringResource(R.string.language),
+                    data = movie.originalLanguage ?: "N/A",
+                    imageVector = Icons.Default.Language,
+                    contentDescription = stringResource(R.string.language)
+                )
+            }
+            item {
+                DataItem(
+                    title = stringResource(R.string.status),
+                    data = movie.status ?: "N/A",
+                    imageVector = Icons.Default.NewReleases,
+                    contentDescription = stringResource(R.string.status)
+                )
+            }
+            item {
+                DataItem(
+                    title = stringResource(R.string.date),
+                    data = movie.releaseDate ?: "N/A",
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = stringResource(R.string.date)
+                )
+            }
         }
         Text(
             modifier = Modifier
