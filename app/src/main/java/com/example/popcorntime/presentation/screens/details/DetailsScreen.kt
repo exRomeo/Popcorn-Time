@@ -238,7 +238,6 @@ fun DetailsSection(modifier: Modifier = Modifier, movie: Movie) {
 
         LazyRow(
             modifier = Modifier
-//                .padding(vertical = 8.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
