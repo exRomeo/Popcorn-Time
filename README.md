@@ -24,7 +24,7 @@ With Popcorn Time discover the most popular or top-rated playing movies or searc
 
 # background
 
-Popcorn Time was an excellent opportunity to deepen my knowledge of Jetpack compose and learn about new technologies such as pagin3 library and dagger hilt it's my first app using such amount of new technologies I'm not familiar with but it won't be the last as I'm eager to learn more and more
+Popcorn Time was an excellent opportunity to deepen my knowledge of Jetpack compose and learn about new technologies such as Swipe to refresh, Pager, Pagin3 library and Dagger Hilt it's my first app using such amount of new technologies I'm not familiar with but it won't be the last as I'm eager to learn more and more
 
 ## Technologies Used
 
