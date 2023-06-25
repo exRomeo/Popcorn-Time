@@ -16,7 +16,7 @@ With Popcorn Time discover the most popular or top-rated playing movies or searc
 
 ## Environment Variables
 
-  To run this project on your device, kindly get your own API key from the [Here](https://developer.themoviedb.org/reference/intro/authentication#api-key-quick-start) and include it in the local.properties file in a new line as follows: 
+  To run this project on your device, kindly get your own API key from [Here](https://developer.themoviedb.org/reference/intro/authentication#api-key-quick-start) and include it in the local.properties file in a new line as follows: 
  - `APIKEY=Bearer "your API key goes here"`
 
 
