@@ -158,7 +158,9 @@ fun MovieGrid(
             MovieCard(
                 Modifier
                     .padding(4.dp)
-                    .clickable { navController.navigate(Screens.Details.route + "/${movies[it]!!.id}") },
+                    .clickable { navController.navigate(Screens.Details.route + "/${movies[it]!!.id}", builder = {
+                        launchSingleTop = true
+                    }) },
                 movie = movies[it]!!
             )
         }
