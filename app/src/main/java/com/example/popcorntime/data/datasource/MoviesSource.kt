@@ -1,12 +1,11 @@
 package com.example.popcorntime.data.datasource
 
-import com.example.popcorntime.BuildConfig
 import com.example.popcorntime.core.helpers.MovieAPI
 import com.example.popcorntime.data.models.BackDropsResponse
 import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.data.models.MoviesResponse
 
-class MoviesSource(private val movieAPI: MovieAPI) : IMoviesSource {
+class MoviesSource(private val movieAPI: MovieAPI, private val apiKey: String) : IMoviesSource {
 
     override suspend fun getMovies(
         sortBy: String,
@@ -14,7 +13,7 @@ class MoviesSource(private val movieAPI: MovieAPI) : IMoviesSource {
         page: UInt
     ): MoviesResponse =
         movieAPI.getMovies(
-            apiKey = BuildConfig.APIKEY,
+            apiKey = apiKey,
             sortBy = sortBy,
             language = language,
             page = page
@@ -25,7 +24,7 @@ class MoviesSource(private val movieAPI: MovieAPI) : IMoviesSource {
         language: String
     ): Movie =
         movieAPI.getMovie(
-            apiKey = BuildConfig.APIKEY,
+            apiKey = apiKey,
             movieID = movieID,
             language = language
         )
@@ -35,7 +34,7 @@ class MoviesSource(private val movieAPI: MovieAPI) : IMoviesSource {
         language: String
     ): BackDropsResponse =
         movieAPI.getImages(
-            apiKey = BuildConfig.APIKEY,
+            apiKey = apiKey,
             movieID = movieID,
             language = language
         )
@@ -46,7 +45,7 @@ class MoviesSource(private val movieAPI: MovieAPI) : IMoviesSource {
         page: UInt
     ): MoviesResponse =
         movieAPI.movieSearch(
-            apiKey = BuildConfig.APIKEY,
+            apiKey = apiKey,
             query = query,
             include_adult = false,
             language = language,

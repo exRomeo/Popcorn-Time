@@ -1,5 +1,3 @@
-
-
 package com.example.popcorntime.presentation.screens.home
 
 import androidx.compose.foundation.clickable
@@ -25,18 +23,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.example.popcorntime.PopcornTimeApplication
 import com.example.popcorntime.R
 import com.example.popcorntime.core.navigation.Screens
 import com.example.popcorntime.core.state.SearchWidgetState
@@ -55,12 +51,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    val viewModel: HomeViewModel = viewModel(
-        factory = HomeViewModelFactory(
-            moviesRepository = (LocalContext.current.applicationContext as PopcornTimeApplication).moviesRepository,
-            connectionUtil = (LocalContext.current.applicationContext as PopcornTimeApplication).connectionUtil
-        )
-    )
+    val viewModel: HomeViewModel = hiltViewModel()
 
     val searchWidgetState by viewModel.searchWidgetState
     val searchTextState by viewModel.searchTextState.collectAsState()
