@@ -33,4 +33,4 @@ With Popcorn Time discover the most popular or top-rated playing movies or searc
 - Swipe to Refresh
 - View Pager
 - MVVM Architecture
-
+- Dagger Hilt
