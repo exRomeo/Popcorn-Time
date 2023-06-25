@@ -1,7 +1,6 @@
 package com.example.popcorntime.presentation.screens.details
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.popcorntime.core.state.Language
 import com.example.popcorntime.core.state.UIState
@@ -9,11 +8,14 @@ import com.example.popcorntime.core.utils.ConnectionUtil
 import com.example.popcorntime.data.models.Backdrop
 import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.data.repository.IMoviesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailsViewModel(
+@HiltViewModel
+class DetailsViewModel @Inject constructor(
     private val moviesRepository: IMoviesRepository,
     private val connectionUtil: ConnectionUtil
 ) : ViewModel() {
@@ -55,21 +57,5 @@ class DetailsViewModel(
             }
         else
             _movie.value = UIState.NotConnected
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-class DetailsViewModelFactory(
-    private val moviesRepository: IMoviesRepository,
-    private val connectionUtil: ConnectionUtil
-) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(DetailsViewModel::class.java))
-            DetailsViewModel(
-                moviesRepository = moviesRepository,
-                connectionUtil = connectionUtil
-            ) as T
-        else throw Exception("ViewModel Not Found!")
     }
 }

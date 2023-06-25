@@ -5,7 +5,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -20,6 +19,7 @@ import com.example.popcorntime.data.models.Movie
 import com.example.popcorntime.data.pagingsource.MoviePagingSource
 import com.example.popcorntime.data.pagingsource.MovieSearchPagingSource
 import com.example.popcorntime.data.repository.IMoviesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +29,10 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val moviesRepository: IMoviesRepository,
     private val connectionUtil: ConnectionUtil
 ) : ViewModel() {
@@ -85,7 +87,6 @@ class HomeViewModel(
         }
     }
 
-    @OptIn(FlowPreview::class)
     fun updateSearchTextState(newValue: String) {
         _searchTextState.value = newValue
 
@@ -122,22 +123,5 @@ class HomeViewModel(
             }
         else
             _state.value = UIState.NotConnected
-    }
-}
-
-
-@Suppress("UNCHECKED_CAST")
-class HomeViewModelFactory(
-    private val moviesRepository: IMoviesRepository,
-    private val connectionUtil: ConnectionUtil
-) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(HomeViewModel::class.java))
-            HomeViewModel(
-                moviesRepository = moviesRepository,
-                connectionUtil = connectionUtil
-            ) as T
-        else throw Exception("ViewModel Not Found!")
     }
 }

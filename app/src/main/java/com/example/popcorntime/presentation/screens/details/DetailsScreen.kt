@@ -52,16 +52,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.popcorntime.PopcornTimeApplication
 import com.example.popcorntime.R
 import com.example.popcorntime.core.state.Language
 import com.example.popcorntime.core.state.UIState
@@ -108,12 +106,8 @@ fun DetailsScreenContent(
     modifier: Modifier = Modifier,
     movieID: Int
 ) {
-    val viewModel: DetailsViewModel = viewModel(
-        factory = DetailsViewModelFactory(
-            moviesRepository = (LocalContext.current.applicationContext as PopcornTimeApplication).moviesRepository,
-            connectionUtil = (LocalContext.current.applicationContext as PopcornTimeApplication).connectionUtil
-        )
-    )
+    val viewModel: DetailsViewModel = hiltViewModel()
+
 
     viewModel.getMovie(movieID, Language.English)
     val refreshScope = rememberCoroutineScope()
@@ -305,7 +299,7 @@ fun GenreChips(genres: List<Genre>) {
             AssistChip(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 onClick = {},
-                label = { Text(text = it.name ?: "") }
+                label = { Text(text = it.name ?: "N/A") }
             )
         }
     }
