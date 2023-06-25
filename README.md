@@ -4,6 +4,7 @@ With Popcorn Time discover the most popular or top-rated playing movies or searc
 
 
 
+
 ![Logo](https://i.imgur.com/iqUuhzA.png)
 ![Logo](https://i.imgur.com/gIcHgK6.jpg)
 ![Logo](https://i.imgur.com/EPsl7ny.jpg)
@@ -20,6 +21,10 @@ With Popcorn Time discover the most popular or top-rated playing movies or searc
  - `APIKEY=Bearer "your API key goes here"`
 
 
+
+# background
+
+Popcorn Time was an excellent opportunity to deepen my knowledge of Jetpack compose and learn about new technologies such as pagin3 library and dagger hilt it's my first app using such amount of new technologies I'm not familiar with but it won't be the last as I'm eager to learn more and more
 
 ## Technologies Used
 
