@@ -1,11 +1,16 @@
 package com.example.popcorntime.common.presentation.composables
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AppBarDefaults
@@ -22,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -40,9 +44,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.popcorntime.R
+import com.example.popcorntime.core.state.SearchWidgetState
+import com.example.popcorntime.core.state.SortBy
 import com.example.popcorntime.old_needs_sorting.core.state.SearchWidgetState
 import com.example.popcorntime.old_needs_sorting.core.state.SortBy
 import com.example.popcorntime.common.presentation.ui.theme.PopcornTimeTheme
@@ -128,6 +133,7 @@ fun DefaultAppBar(onSearchTriggered: () -> Unit, onFilterClicked: (SortBy) -> Un
 }
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainAppBar(
     searchWidgetState: SearchWidgetState,
@@ -138,31 +144,39 @@ fun MainAppBar(
     onSearchTriggered: () -> Unit,
     onFilterClicked: (SortBy) -> Unit
 ) {
-    when (searchWidgetState) {
-        SearchWidgetState.Closed -> {
-            DefaultAppBar(onSearchTriggered = onSearchTriggered, onFilterClicked = onFilterClicked)
-        }
 
-        SearchWidgetState.Opened -> {
-            SearchAppBar(
-                text = searchTextState,
-                onTextChange = onTextChange,
-                onCloseClicked = onCloseClicked,
-                onSearchClicked = onSearchClicked
-            )
-        }
-    }
-}
+    AnimatedContent(
+        targetState = searchWidgetState,
+        transitionSpec = {
+            when (targetState) {
+                SearchWidgetState.Opened -> {
+                    (expandHorizontally { width -> width } + fadeIn()).togetherWith(
+                        shrinkHorizontally { width -> width } + fadeOut())
+                }
 
-@Composable
-@Preview
-fun SearchAppBarPreview() {
-    PopcornTimeTheme() {
-        Scaffold(topBar = {
-            SearchAppBar("", {}, {}, {})
-        }) {
-            Column(Modifier.padding(it)) {
+                SearchWidgetState.Closed -> {
+                    (expandHorizontally { width -> width } + fadeIn()).togetherWith(
+                        shrinkHorizontally { width -> width } + fadeOut())
+                }
+            }
+        },
+        label = "AnimatedAppBarContent"
+    ) {
+        when (it) {
+            SearchWidgetState.Closed -> {
+                DefaultAppBar(
+                    onSearchTriggered = onSearchTriggered,
+                    onFilterClicked = onFilterClicked
+                )
+            }
 
+            SearchWidgetState.Opened -> {
+                SearchAppBar(
+                    text = searchTextState,
+                    onTextChange = onTextChange,
+                    onCloseClicked = onCloseClicked,
+                    onSearchClicked = onSearchClicked
+                )
             }
         }
     }
@@ -175,6 +189,7 @@ fun SearchAppBar(
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit
 ) {
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -196,7 +211,9 @@ fun SearchAppBar(
             },
             singleLine = true,
             leadingIcon = {
-                IconButton(modifier = Modifier.alpha(ContentAlpha.medium), onClick = { /*TODO*/ }) {
+                IconButton(
+                    modifier = Modifier.alpha(ContentAlpha.medium),
+                    onClick = { onSearchClicked(text) }) {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = stringResource(id = R.string.search),

@@ -1,28 +1,31 @@
 package com.example.popcorntime.old_needs_sorting.data.models
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class BackDropsResponse(
-    @field:SerializedName("backdrops")
+    @SerializedName("backdrops")
     val backdrops: MutableList<Backdrop>? = null,
-    @field:SerializedName("id")
+    @SerializedName("id")
     val id: Long? = null,
-    @field:SerializedName("posters")
+    @SerializedName("posters")
     val posters: List<Backdrop>? = null
 )
 
+@Keep
 data class Backdrop(
-    @field:SerializedName("aspect_ratio")
+    @SerializedName("aspect_ratio")
     val aspectRatio: Double? = null,
-    @field:SerializedName("height")
+    @SerializedName("height")
     val height: Long? = null,
-    @field:SerializedName("file_path")
+    @SerializedName("file_path")
     val filePath: String? = null,
-    @field:SerializedName("vote_average")
+    @SerializedName("vote_average")
     val voteAverage: Double? = null,
-    @field:SerializedName("vote_count")
+    @SerializedName("vote_count")
     val voteCount: Long? = null,
-    @field:SerializedName("width")
+    @SerializedName("width")
     val width: Long? = null
 ){
     fun getImageURL():String =

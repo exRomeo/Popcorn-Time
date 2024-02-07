@@ -1,8 +1,5 @@
 package com.example.popcorntime.common.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -12,7 +9,6 @@ import androidx.navigation.navArgument
 import com.example.popcorntime.old_needs_sorting.presentation.screens.details.DetailsScreen
 import com.example.popcorntime.modules.movies_listing.presentation.MoviesListScreen
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainNavigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screens.Home.route) {
@@ -24,23 +20,10 @@ fun MainNavigation(navController: NavHostController) {
         }
         composable(
             route = Screens.Details.route + "/{movieID}",
-            arguments = listOf(
-                navArgument("movieID") {
-                    type = NavType.IntType
-                }
-            ),
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Up,
-                    animationSpec = tween(200)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Down,
-                    animationSpec = tween(200)
-                )
+            arguments = listOf(navArgument("movieID") {
+                type = NavType.IntType
             }
+            )
         ) {
             it.arguments?.getInt("movieID")
                 ?.let { it1 -> DetailsScreen(navController = navController, movieID = it1) }
