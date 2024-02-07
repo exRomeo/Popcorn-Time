@@ -24,7 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Language
@@ -88,7 +88,7 @@ fun DetailsScreen(navController: NavHostController, movieID: Int) {
             )
         }, navigationIcon = {
             IconButton(onClick = { navController.navigateUp() }) {
-                Icon(Icons.Default.ArrowBack, "Back")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
             }
         })
     }) {
@@ -179,10 +179,11 @@ fun DetailsState(modifier: Modifier = Modifier, viewModel: DetailsViewModel) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImagesSection(modifier: Modifier = Modifier, images: List<Backdrop>) {
+    val pagerState = rememberPagerState { images.size }
     Box(modifier = modifier.aspectRatio(1.778f)) {
         HorizontalPager(
             modifier = modifier.fillMaxWidth(),
-            state = rememberPagerState { images.size },
+            state = pagerState,
             pageSpacing = 0.dp,
             userScrollEnabled = true,
             reverseLayout = false,
@@ -190,6 +191,7 @@ fun ImagesSection(modifier: Modifier = Modifier, images: List<Backdrop>) {
             beyondBoundsPageCount = 3,
             pageSize = PageSize.Fill,
             pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+                pagerState,
                 Orientation.Horizontal
             ),
             pageContent = {
@@ -221,14 +223,14 @@ fun ImagesSection(modifier: Modifier = Modifier, images: List<Backdrop>) {
 fun DetailsSection(modifier: Modifier = Modifier, movie: Movie) {
     Column(modifier = modifier) {
         Text(
-            text = movie.title ?: "N/A",
+            text = movie.title.orEmpty(),
             style = TextStyle(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = MaterialTheme.typography.titleLarge.fontSize
             )
         )
 
-        GenreChips(movie.genres ?: listOf())
+        GenreChips(movie.genres.orEmpty())
 
         LazyRow(
             modifier = Modifier
@@ -254,7 +256,7 @@ fun DetailsSection(modifier: Modifier = Modifier, movie: Movie) {
             item {
                 DataItem(
                     title = stringResource(R.string.language),
-                    data = movie.originalLanguage ?: "N/A",
+                    data = movie.originalLanguage.orEmpty(),
                     imageVector = Icons.Default.Language,
                     contentDescription = stringResource(R.string.language)
                 )
@@ -262,7 +264,7 @@ fun DetailsSection(modifier: Modifier = Modifier, movie: Movie) {
             item {
                 DataItem(
                     title = stringResource(R.string.status),
-                    data = movie.status ?: "N/A",
+                    data = movie.status.orEmpty(),
                     imageVector = Icons.Default.NewReleases,
                     contentDescription = stringResource(R.string.status)
                 )
@@ -270,7 +272,7 @@ fun DetailsSection(modifier: Modifier = Modifier, movie: Movie) {
             item {
                 DataItem(
                     title = stringResource(R.string.date),
-                    data = movie.releaseDate ?: "N/A",
+                    data = movie.releaseDate.orEmpty(),
                     imageVector = Icons.Default.DateRange,
                     contentDescription = stringResource(R.string.date)
                 )
@@ -286,7 +288,7 @@ fun DetailsSection(modifier: Modifier = Modifier, movie: Movie) {
             )
         )
         Text(
-            text = movie.overview ?: "N/A",
+            text = movie.overview.orEmpty(),
             style = TextStyle(fontSize = 18.sp)
         )
     }
@@ -299,7 +301,7 @@ fun GenreChips(genres: List<Genre>) {
             AssistChip(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 onClick = {},
-                label = { Text(text = it.name ?: "N/A") }
+                label = { Text(text = it.name.orEmpty()) }
             )
         }
     }

@@ -6,16 +6,16 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.popcorntime.presentation.screens.details.DetailsScreen
 import com.example.popcorntime.presentation.screens.home.HomeScreen
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainNavigation(navController: NavHostController) {
-    AnimatedNavHost(navController = navController, startDestination = Screens.Home.route) {
+    NavHost(navController = navController, startDestination = Screens.Home.route) {
         composable(
             route = Screens.Home.route
         ) {
@@ -24,9 +24,10 @@ fun MainNavigation(navController: NavHostController) {
         }
         composable(
             route = Screens.Details.route + "/{movieID}",
-            arguments = listOf(navArgument("movieID") {
-                type = NavType.IntType
-            }
+            arguments = listOf(
+                navArgument("movieID") {
+                    type = NavType.IntType
+                }
             ),
             enterTransition = {
                 slideIntoContainer(
