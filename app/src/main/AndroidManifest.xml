@@ -17,7 +17,7 @@
         android:theme="@style/Theme.PopcornTime"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".modules.main_activity_host.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.PopcornTime">
             <intent-filter>
