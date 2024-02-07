@@ -154,7 +154,7 @@ fun MovieGrid(
         columns = GridCells.Adaptive(100.dp),
         contentPadding = PaddingValues(4.dp),
     ) {
-        items(movies.itemCount, key = movies.itemKey { it.id }) {
+        items(movies.itemCount, key = movies.itemKey { it.uniqueId }) {
             MovieCard(
                 Modifier
                     .padding(4.dp)
