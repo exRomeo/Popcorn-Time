@@ -46,11 +46,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.popcorntime.R
-import com.example.popcorntime.core.state.SearchWidgetState
-import com.example.popcorntime.core.state.SortBy
 import com.example.popcorntime.old_needs_sorting.core.state.SearchWidgetState
 import com.example.popcorntime.old_needs_sorting.core.state.SortBy
-import com.example.popcorntime.common.presentation.ui.theme.PopcornTimeTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
