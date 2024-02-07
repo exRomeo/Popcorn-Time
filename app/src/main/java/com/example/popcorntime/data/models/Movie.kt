@@ -1,47 +1,51 @@
 package com.example.popcorntime.data.models
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class Movie(
-    @field:SerializedName("adult")
+    @SerializedName("adult")
     val adult: Boolean? = null,
-    @field:SerializedName("genres")
+    @SerializedName("genres")
     val genres: List<Genre>? = null,
-    @field:SerializedName("backdrop_path")
+    @SerializedName("backdrop_path")
     val backdropPath: String? = null,
-    @field:SerializedName("genre_ids")
+    @SerializedName("genre_ids")
     val genreIDS: List<Long>? = null,
-    @field:SerializedName("id")
-    val id: Long,
-    @field:SerializedName("original_language")
+    @SerializedName("id")
+    val id: Int? = null,
+    @SerializedName("original_language")
     val originalLanguage: String? = null,
-    @field:SerializedName("original_title")
+    @SerializedName("original_title")
     val originalTitle: String? = null,
-    @field:SerializedName("overview")
+    @SerializedName("overview")
     val overview: String? = null,
-    @field:SerializedName("popularity")
+    @SerializedName("popularity")
     val popularity: Double? = null,
-    @field:SerializedName("poster_path")
+    @SerializedName("poster_path")
     val posterPath: String? = null,
-    @field:SerializedName("production_companies")
+    @SerializedName("production_companies")
     val productionCompanies: List<ProductionCompany>? = null,
-    @field:SerializedName("production_country")
+    @SerializedName("production_country")
     val productionCountries: List<ProductionCountry>? = null,
-    @field:SerializedName("release_date")
+    @SerializedName("release_date")
     val releaseDate: String? = null,
-    @field:SerializedName("status")
+    @SerializedName("status")
     val status: String? = null,
-    @field:SerializedName("tagline")
+    @SerializedName("tagline")
     val tagline: String? = null,
-    @field:SerializedName("title")
+    @SerializedName("title")
     val title: String? = null,
-    @field:SerializedName("video")
+    @SerializedName("video")
     val video: Boolean? = null,
-    @field:SerializedName("vote_average")
+    @SerializedName("vote_average")
     val voteAverage: Double? = null,
-    @field:SerializedName("vote_count")
+    @SerializedName("vote_count")
     val voteCount: Long? = null
 ) {
+    val uniqueId: Int
+        get() = /*id ?:*/ System.identityHashCode(this)
     fun getPosterURL(): String =
         "https://image.tmdb.org/t/p/w500/$posterPath"
 
@@ -50,20 +54,20 @@ data class Movie(
 }
 
 data class ProductionCompany(
-    @field:SerializedName("id")
+    @SerializedName("id")
     val id: Long? = null,
-    @field:SerializedName("logo_path")
+    @SerializedName("logo_path")
     val logoPath: String? = null,
-    @field:SerializedName("name")
+    @SerializedName("name")
     val name: String? = null,
-    @field:SerializedName("origin_country")
+    @SerializedName("origin_country")
     val originCountry: String? = null
 )
 
 data class ProductionCountry(
-    @field:SerializedName("iso_3166_1")
+    @SerializedName("iso_3166_1")
     val iso: String? = null,
-    @field:SerializedName("name")
+    @SerializedName("name")
     val name: String? = null
 )
 
