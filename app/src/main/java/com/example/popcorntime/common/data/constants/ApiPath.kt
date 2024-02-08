@@ -1,4 +1,4 @@
-package com.example.popcorntime.common.constants
+package com.example.popcorntime.common.data.constants
 
 object ApiPath {
     const val MOVIE = "movie"

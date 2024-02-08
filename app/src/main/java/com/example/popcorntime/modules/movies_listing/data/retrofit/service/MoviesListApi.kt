@@ -1,12 +1,12 @@
 package com.example.popcorntime.modules.movies_listing.data.retrofit.service
 
-import com.example.popcorntime.common.constants.ApiPath.MOVIE_SEARCH
-import com.example.popcorntime.common.constants.ApiPath.SORT_BY
-import com.example.popcorntime.common.constants.ApiPath.SORT_BY_PATH
-import com.example.popcorntime.common.constants.ApiQuery.INCLUDE_ADULT
-import com.example.popcorntime.common.constants.ApiQuery.LANGUAGE
-import com.example.popcorntime.common.constants.ApiQuery.PAGE
-import com.example.popcorntime.common.constants.ApiQuery.QUERY
+import com.example.popcorntime.common.data.constants.ApiPath.MOVIE_SEARCH
+import com.example.popcorntime.common.data.constants.ApiPath.SORT_BY
+import com.example.popcorntime.common.data.constants.ApiPath.SORT_BY_PATH
+import com.example.popcorntime.common.data.constants.ApiQuery.INCLUDE_ADULT
+import com.example.popcorntime.common.data.constants.ApiQuery.LANGUAGE
+import com.example.popcorntime.common.data.constants.ApiQuery.PAGE
+import com.example.popcorntime.common.data.constants.ApiQuery.QUERY
 import com.example.popcorntime.modules.movies_listing.data.retrofit.response.MoviesResponse
 import retrofit2.http.GET
 import retrofit2.http.Header

@@ -32,7 +32,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.example.popcorntime.R
-import com.example.popcorntime.common.navigation.Screens
+import com.example.popcorntime.common.presentation.navigation.Screens
 import com.example.popcorntime.common.presentation.composables.AnimatedShimmer
 import com.example.popcorntime.common.presentation.composables.Error
 import com.example.popcorntime.common.presentation.composables.LoadingHomeScreen

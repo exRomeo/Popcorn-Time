@@ -9,7 +9,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.popcorntime.common.constants.ApiConstants.ITEMS_PER_PAGE
+import com.example.popcorntime.common.data.constants.ApiConstants.ITEMS_PER_PAGE
 import com.example.popcorntime.modules.movies_listing.domain.usecase.GetMoviesPaginatedListUseCase
 import com.example.popcorntime.modules.movies_listing.domain.usecase.SearchMoviesPaginatedUseCase
 import com.example.popcorntime.modules.movies_listing.presentation.models.MovieUIModel

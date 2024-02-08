@@ -21,7 +21,9 @@ abstract class MovieDetailsModule {
     companion object {
         @Provides
         @ViewModelScoped
-        fun providesMovieDetailsApi(retrofit: Retrofit): MovieDetailsApi {
+        fun providesMovieDetailsApi(
+            retrofit: Retrofit
+        ): MovieDetailsApi {
             return retrofit.create(MovieDetailsApi::class.java)
         }
     }

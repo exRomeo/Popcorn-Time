@@ -2,13 +2,14 @@ package com.example.popcorntime.common.presentation.composables
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
@@ -17,23 +18,21 @@ import coil.request.SuccessResult
 @Composable
 fun NetworkImage(
     modifier: Modifier = Modifier,
-    url: String,
+    image: Any?,
     placeHolder: @Composable () -> Unit,
     error: @Composable () -> Unit,
-    contentDescription: String
+    contentDescription: String? = null
 ) {
-    var isLoading: Int by rememberSaveable { mutableStateOf(0) }
+    var isLoading: Int by rememberSaveable { mutableIntStateOf(-1) }
     when (isLoading) {
-
-        0 -> placeHolder()
-
-        -1 -> error()
+        0 -> error()
+        1 -> placeHolder()
     }
 
     AsyncImage(
+        modifier = modifier,
         model = ImageRequest.Builder(LocalContext.current)
-            .data(url)
-
+            .data(image)
             .listener(object : ImageRequest.Listener {
                 override fun onSuccess(request: ImageRequest, result: SuccessResult) {
                     super.onSuccess(request, result)
@@ -49,6 +48,13 @@ fun NetworkImage(
             .build(),
         contentDescription = contentDescription,
         contentScale = ContentScale.Fit,
-        modifier = modifier
+        onState = { state ->
+            isLoading = when (state) {
+                AsyncImagePainter.State.Empty -> -1
+                is AsyncImagePainter.State.Error -> 0
+                is AsyncImagePainter.State.Loading -> 1
+                is AsyncImagePainter.State.Success -> 2
+            }
+        }
     )
 }

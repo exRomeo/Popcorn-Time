@@ -2,7 +2,7 @@ package com.example.popcorntime.modules.movies_listing.presentation.paging_sourc
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.popcorntime.common.constants.ApiConstants
+import com.example.popcorntime.common.data.constants.ApiConstants
 import com.example.popcorntime.modules.movies_listing.domain.usecase.GetMoviesPaginatedListUseCase
 import com.example.popcorntime.modules.movies_listing.presentation.mappers.toUI
 import com.example.popcorntime.modules.movies_listing.presentation.models.MovieUIModel

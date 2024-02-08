@@ -1,4 +1,4 @@
-package com.example.popcorntime.common.constants
+package com.example.popcorntime.common.data.constants
 
 object ApiConstants {
     const val BASE_URL = "https://api.themoviedb.org/3/"
