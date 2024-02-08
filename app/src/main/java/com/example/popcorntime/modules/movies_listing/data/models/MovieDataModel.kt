@@ -43,7 +43,4 @@ data class MovieDataModel(
     val voteAverage: Double? = null,
     @SerializedName("vote_count")
     val voteCount: Long? = null
-){
-    //TODO must remove this from here
-    fun getVoteAverage(): Float = ((voteAverage?.times(10))?.toInt() ?: 0) / 10f
-}
+)

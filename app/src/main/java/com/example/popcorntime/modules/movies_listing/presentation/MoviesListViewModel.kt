@@ -13,13 +13,12 @@ import com.example.popcorntime.common.constants.ApiConstants.ITEMS_PER_PAGE
 import com.example.popcorntime.modules.movies_listing.domain.usecase.GetMoviesPaginatedListUseCase
 import com.example.popcorntime.modules.movies_listing.domain.usecase.SearchMoviesPaginatedUseCase
 import com.example.popcorntime.modules.movies_listing.presentation.models.MovieUIModel
-import com.example.popcorntime.old_needs_sorting.core.state.Language
-import com.example.popcorntime.old_needs_sorting.core.state.SearchWidgetState
-import com.example.popcorntime.old_needs_sorting.core.state.SortBy
-import com.example.popcorntime.old_needs_sorting.core.state.UIState
-import com.example.popcorntime.old_needs_sorting.core.utils.ConnectionUtil
-import com.example.popcorntime.old_needs_sorting.data.pagingsource.MoviePagingSource
-import com.example.popcorntime.old_needs_sorting.data.pagingsource.MovieSearchPagingSource
+import com.example.popcorntime.modules.movies_listing.presentation.paging_sources.MoviePagingSource
+import com.example.popcorntime.modules.movies_listing.presentation.paging_sources.MovieSearchPagingSource
+import com.example.popcorntime.common.presentation.models.Language
+import com.example.popcorntime.common.presentation.models.SearchWidgetState
+import com.example.popcorntime.common.presentation.models.SortBy
+import com.example.popcorntime.common.presentation.models.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +35,6 @@ import javax.inject.Inject
 class MoviesListViewModel @Inject constructor(
     private val getMoviesPaginatedListUseCase: GetMoviesPaginatedListUseCase,
     private val searchMoviesPaginatedUseCase: SearchMoviesPaginatedUseCase,
-    private val connectionUtil: ConnectionUtil
 ) : ViewModel() {
 
     private var _state: MutableStateFlow<UIState> = MutableStateFlow(UIState.Loading)
@@ -60,18 +58,15 @@ class MoviesListViewModel @Inject constructor(
     }
 
     fun getMovies() {
-        if (connectionUtil.isConnected())
-            viewModelScope.launch {
-                _state.value = UIState.Loading
-                val moviesPager: Flow<PagingData<MovieUIModel>> = Pager(
-                    PagingConfig(pageSize = ITEMS_PER_PAGE)
-                ) {
-                    MoviePagingSource(filter, language, getMoviesPaginatedListUseCase)
-                }.flow.cachedIn(viewModelScope)
-                _state.value = UIState.Success(moviesPager)
-            }
-        else
-            _state.value = UIState.NotConnected
+        viewModelScope.launch {
+            _state.value = UIState.Loading
+            val moviesPager: Flow<PagingData<MovieUIModel>> = Pager(
+                PagingConfig(pageSize = ITEMS_PER_PAGE)
+            ) {
+                MoviePagingSource(filter, language, getMoviesPaginatedListUseCase)
+            }.flow.cachedIn(viewModelScope)
+            _state.value = UIState.Success(moviesPager)
+        }
     }
 
     fun refresh() {
@@ -108,21 +103,18 @@ class MoviesListViewModel @Inject constructor(
     }
 
     fun movieSearch(query: String) {
-        if (connectionUtil.isConnected())
-            viewModelScope.launch {
-                _state.value = UIState.Loading
-                val moviesPager: Flow<PagingData<MovieUIModel>> = Pager(
-                    PagingConfig(pageSize = ITEMS_PER_PAGE)
-                ) {
-                    MovieSearchPagingSource(
-                        query = query,
-                        language = language,
-                        searchMoviesUseCase = searchMoviesPaginatedUseCase
-                    )
-                }.flow.cachedIn(viewModelScope)
-                _state.value = UIState.Success(moviesPager)
-            }
-        else
-            _state.value = UIState.NotConnected
+        viewModelScope.launch {
+            _state.value = UIState.Loading
+            val moviesPager: Flow<PagingData<MovieUIModel>> = Pager(
+                PagingConfig(pageSize = ITEMS_PER_PAGE)
+            ) {
+                MovieSearchPagingSource(
+                    query = query,
+                    language = language,
+                    searchMoviesUseCase = searchMoviesPaginatedUseCase
+                )
+            }.flow.cachedIn(viewModelScope)
+            _state.value = UIState.Success(moviesPager)
+        }
     }
 }

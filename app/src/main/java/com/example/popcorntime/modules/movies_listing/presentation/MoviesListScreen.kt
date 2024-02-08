@@ -41,8 +41,8 @@ import com.example.popcorntime.common.presentation.composables.MovieCard
 import com.example.popcorntime.common.presentation.composables.MovieCardPlaceholder
 import com.example.popcorntime.common.presentation.composables.NoNetwork
 import com.example.popcorntime.modules.movies_listing.presentation.models.MovieUIModel
-import com.example.popcorntime.old_needs_sorting.core.state.SearchWidgetState
-import com.example.popcorntime.old_needs_sorting.core.state.UIState
+import com.example.popcorntime.common.presentation.models.SearchWidgetState
+import com.example.popcorntime.common.presentation.models.UIState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 

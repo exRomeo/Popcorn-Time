@@ -6,7 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.popcorntime.old_needs_sorting.presentation.screens.details.DetailsScreen
+import com.example.popcorntime.modules.movie_details.presentation.DetailsScreen
 import com.example.popcorntime.modules.movies_listing.presentation.MoviesListScreen
 
 @Composable
