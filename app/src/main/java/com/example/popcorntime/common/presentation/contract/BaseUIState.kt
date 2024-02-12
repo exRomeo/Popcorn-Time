@@ -4,5 +4,5 @@ import androidx.compose.runtime.MutableState
 
 interface BaseUIState{
     val networkError: MutableState<Boolean>
-    val loading: MutableState<Boolean>
+    val refreshing: MutableState<Boolean>
 }

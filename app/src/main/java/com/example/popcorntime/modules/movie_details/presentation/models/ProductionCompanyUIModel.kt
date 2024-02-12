@@ -1,4 +1,4 @@
-package com.example.popcorntime.modules.movies_listing.presentation.models
+package com.example.popcorntime.modules.movie_details.presentation.models
 
 data class ProductionCompanyUIModel(
     val id: Long?,

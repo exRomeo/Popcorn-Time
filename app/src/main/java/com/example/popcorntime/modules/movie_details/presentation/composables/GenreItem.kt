@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.popcorntime.modules.movies_listing.presentation.models.GenreUIModel
+import com.example.popcorntime.modules.movie_details.presentation.models.GenreUIModel
 
 @Composable
 fun GenreItem(genres: List<GenreUIModel>) {

@@ -1,7 +1,6 @@
 package com.example.popcorntime.common.presentation.composables
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -33,6 +32,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -67,9 +67,10 @@ fun DefaultAppBar(onSearchTriggered: () -> Unit, onFilterClicked: (SortBy) -> Un
         }
         isMenuVisible = false
     }
-    TopAppBar(title = {
-        Text(text = stringResource(id = R.string.home))
-    },
+    TopAppBar(
+        title = {
+            Text(text = stringResource(id = R.string.home))
+        },
         actions = {
             IconButton(onClick = onSearchTriggered) {
                 Icon(Icons.Default.Search, contentDescription = "")
@@ -130,22 +131,21 @@ fun DefaultAppBar(onSearchTriggered: () -> Unit, onFilterClicked: (SortBy) -> Un
 }
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MainAppBar(
-    searchWidgetState: SearchWidgetState,
-    searchTextState: String,
+fun ScreenHeaderWithSearch(
+    searchWidgetState: State<SearchWidgetState>,
+    searchTextState: State<String>,
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
     onSearchTriggered: () -> Unit,
-    onFilterClicked: (SortBy) -> Unit
+    onChangeSorting: (SortBy) -> Unit
 ) {
 
     AnimatedContent(
         targetState = searchWidgetState,
         transitionSpec = {
-            when (targetState) {
+            when (targetState.value) {
                 SearchWidgetState.Opened -> {
                     (expandHorizontally { width -> width } + fadeIn()).togetherWith(
                         shrinkHorizontally { width -> width } + fadeOut())
@@ -159,17 +159,17 @@ fun MainAppBar(
         },
         label = "AnimatedAppBarContent"
     ) {
-        when (it) {
+        when (it.value) {
             SearchWidgetState.Closed -> {
                 DefaultAppBar(
                     onSearchTriggered = onSearchTriggered,
-                    onFilterClicked = onFilterClicked
+                    onFilterClicked = onChangeSorting
                 )
             }
 
             SearchWidgetState.Opened -> {
                 SearchAppBar(
-                    text = searchTextState,
+                    text = searchTextState.value,
                     onTextChange = onTextChange,
                     onCloseClicked = onCloseClicked,
                     onSearchClicked = onSearchClicked

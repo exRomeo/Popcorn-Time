@@ -16,8 +16,8 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.popcorntime.modules.movie_details.presentation.models.MovieDetailsUIModel
 import com.example.popcorntime.modules.movie_details.presentation.models.MovieImageUIModel
-import com.example.popcorntime.modules.movies_listing.presentation.models.MovieUIModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -26,7 +26,7 @@ fun DetailsScreenContent(
     onBackClicked: () -> Unit,
     onRefreshClicked: () -> Unit,
     refreshingState: State<Boolean>,
-    movie: State<MovieUIModel?>,
+    movie: State<MovieDetailsUIModel?>,
     images: State<List<MovieImageUIModel>?>
 ) {
     val pullRefreshState = rememberPullRefreshState(

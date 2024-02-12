@@ -1,8 +1,8 @@
 package com.example.popcorntime.modules.movie_details.data.remote
 
+import com.example.popcorntime.modules.movie_details.data.models.MovieDetailsDataModel
 import com.example.popcorntime.modules.movie_details.data.retrofit.response.MovieImagesResponse
 import com.example.popcorntime.modules.movie_details.data.retrofit.service.MovieDetailsApi
-import com.example.popcorntime.modules.movies_listing.data.models.MovieDataModel
 import javax.inject.Inject
 
 class MovieDetailsDataSourceImpl @Inject constructor(
@@ -12,7 +12,7 @@ class MovieDetailsDataSourceImpl @Inject constructor(
     override suspend fun getMovieDetails(
         movieID: Int,
         language: String
-    ): MovieDataModel =
+    ): MovieDetailsDataModel =
         movieDetailsApi.getMovieDetails(
             apiKey = apiKey,
             movieID = movieID,

@@ -11,7 +11,6 @@ import com.example.popcorntime.modules.movie_details.presentation.contract.Movie
 import com.example.popcorntime.modules.movie_details.presentation.contract.MovieDetailsUIState
 import com.example.popcorntime.modules.movie_details.presentation.contract.MovieDetailsUserEvent
 import com.example.popcorntime.modules.movie_details.presentation.mappers.toUI
-import com.example.popcorntime.modules.movies_listing.presentation.mappers.toUI
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -71,9 +70,9 @@ class DetailsViewModel @AssistedInject constructor(
     private fun refreshScreen() {
         viewModelScope.launch {
             resetUIState()
-            uiState.loading.value = true
+            uiState.refreshing.value = true
             getMovie(Language.English).join()
-            uiState.loading.value = false
+            uiState.refreshing.value = false
         }
 
     }

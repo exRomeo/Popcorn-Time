@@ -16,7 +16,7 @@ abstract class BaseMVIViewModel<
         >() : ViewModel() {
 
     private val _userEventsFlow: MutableSharedFlow<UserEvent> = MutableSharedFlow()
-    val userEvents get() = _userEventsFlow.asSharedFlow()
+    private val userEvents get() = _userEventsFlow.asSharedFlow()
 
 
     private val _uiEventsFlow: MutableSharedFlow<UIEvent> = MutableSharedFlow()

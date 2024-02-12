@@ -17,12 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.popcorntime.R
 import com.example.popcorntime.common.presentation.composables.CircleWithPercentage
-import com.example.popcorntime.modules.movies_listing.presentation.models.MovieUIModel
+import com.example.popcorntime.modules.movie_details.presentation.models.MovieDetailsUIModel
 
 @Composable
 fun MovieInfoSection(
     modifier: Modifier = Modifier,
-    movie: State<MovieUIModel?>
+    movie: State<MovieDetailsUIModel?>
 ) {
     LazyRow(
         modifier = modifier
@@ -36,7 +36,7 @@ fun MovieInfoSection(
     ) {
         item {
             CircleWithPercentage(
-                percentage = movie.value?.average ?: 0f,
+                percentage = movie.value?.averageRating ?: 0f,
                 stringResource(id = R.string.average)
             )
         }

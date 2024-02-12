@@ -5,13 +5,13 @@ import com.example.popcorntime.modules.movies_listing.data.models.MovieDataModel
 import com.google.gson.annotations.SerializedName
 
 @Keep
-data class MoviesResponse(
+class MoviesResponse(
     @SerializedName("page")
-    val page: Int,
+    val page: Int? = null,
     @SerializedName("results")
-    val movies: List<MovieDataModel>,
+    val movies: List<MovieDataModel>? = null,
     @SerializedName("total_pages")
-    val totalPages: Int,
+    val totalPages: Int? = null,
     @SerializedName("total_results")
-    val totalResults: Int
+    val totalResults: Int? = null
 )

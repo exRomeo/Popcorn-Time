@@ -1,0 +1,31 @@
+package com.example.popcorntime.modules.movie_details.presentation.models
+
+data class MovieDetailsUIModel(
+    val id: Long?,
+    val adult: Boolean?,
+    val backdropPath: String?,
+    val genreIDS: List<Long>?,
+    val originalLanguage: String?,
+    val originalTitle: String?,
+    val overview: String?,
+    val popularity: Double?,
+    val posterPath: String?,
+    val releaseDate: String?,
+    val title: String?,
+    val video: Boolean?,
+    val voteAverage: Double?,
+    val voteCount: Long?,
+    val belongsToCollection: BelongsToCollectionUIModel?,
+    val budget: Long?,
+    val genres: List<GenreUIModel>?,
+    val homepage: String?,
+    val imdbID: String?,
+    val productionCompanies: List<ProductionCompanyUIModel>?,
+    val productionCountries: List<ProductionCountryUIModel>?,
+    val revenue: Long?,
+    val runtime: Long?,
+    val spokenLanguages: List<SpokenLanguageUIModel>?,
+    val status: String?,
+    val tagline: String?,
+    val averageRating: Float
+)

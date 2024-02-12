@@ -3,16 +3,14 @@ package com.example.popcorntime.common.presentation.composables
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
-import coil.request.ErrorResult
 import coil.request.ImageRequest
-import coil.request.SuccessResult
 
 
 @Composable
@@ -23,9 +21,9 @@ fun NetworkImage(
     error: @Composable () -> Unit,
     contentDescription: String? = null
 ) {
-    var isLoading: Int by rememberSaveable { mutableIntStateOf(-1) }
+    var isLoading: Int by remember { mutableIntStateOf(-1) }
     when (isLoading) {
-        0 -> error()
+        -1, 0 -> error()
         1 -> placeHolder()
     }
 
@@ -33,17 +31,6 @@ fun NetworkImage(
         modifier = modifier,
         model = ImageRequest.Builder(LocalContext.current)
             .data(image)
-            .listener(object : ImageRequest.Listener {
-                override fun onSuccess(request: ImageRequest, result: SuccessResult) {
-                    super.onSuccess(request, result)
-                    isLoading = 1
-                }
-
-                override fun onError(request: ImageRequest, result: ErrorResult) {
-                    super.onError(request, result)
-                    isLoading = -1
-                }
-            })
             .crossfade(true)
             .build(),
         contentDescription = contentDescription,

@@ -1,4 +1,4 @@
-package com.example.popcorntime.modules.movies_listing.data.models
+package com.example.popcorntime.modules.movie_details.data.models
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName

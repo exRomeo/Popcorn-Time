@@ -22,7 +22,7 @@ fun DetailsScreen(navController: NavHostController, movieID: Int) {
             }
         )
 
-    val refreshingState = remember { viewModel.uiState.loading }
+    val refreshingState = remember { viewModel.uiState.refreshing }
     val movie = remember { viewModel.uiState.movie }
     val images = remember { viewModel.uiState.images }
 
