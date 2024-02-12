@@ -2,10 +2,9 @@ package com.example.popcorntime.modules.movie_details.data.repository
 
 import com.example.popcorntime.modules.movie_details.data.mappers.toDomain
 import com.example.popcorntime.modules.movie_details.data.remote.MovieDetailsDataSource
+import com.example.popcorntime.modules.movie_details.domain.models.MovieDetailsDomainModel
 import com.example.popcorntime.modules.movie_details.domain.models.MovieImagesDomainModel
 import com.example.popcorntime.modules.movie_details.domain.repository.MovieDetailsRepository
-import com.example.popcorntime.modules.movies_listing.data.mappers.toDomain
-import com.example.popcorntime.modules.movies_listing.domain.models.MovieDomainModel
 import javax.inject.Inject
 
 class MovieDetailsRepositoryImpl @Inject constructor(
@@ -14,7 +13,7 @@ class MovieDetailsRepositoryImpl @Inject constructor(
     override suspend fun getMovieDetails(
         movieID: Int,
         language: String
-    ): MovieDomainModel {
+    ): MovieDetailsDomainModel {
         return movieDetailsDataSource
             .getMovieDetails(
                 movieID = movieID,

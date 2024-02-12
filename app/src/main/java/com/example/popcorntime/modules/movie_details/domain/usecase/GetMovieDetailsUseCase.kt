@@ -1,7 +1,7 @@
 package com.example.popcorntime.modules.movie_details.domain.usecase
 
+import com.example.popcorntime.modules.movie_details.domain.models.MovieDetailsDomainModel
 import com.example.popcorntime.modules.movie_details.domain.repository.MovieDetailsRepository
-import com.example.popcorntime.modules.movies_listing.domain.models.MovieDomainModel
 import javax.inject.Inject
 
 class GetMovieDetailsUseCase @Inject constructor(
@@ -11,7 +11,7 @@ class GetMovieDetailsUseCase @Inject constructor(
     suspend operator fun invoke(
         movieID: Int,
         language: String
-    ): MovieDomainModel =
+    ): MovieDetailsDomainModel =
         repository.getMovieDetails(
             movieID,
             language

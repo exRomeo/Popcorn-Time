@@ -48,8 +48,8 @@ fun MovieCard(modifier: Modifier = Modifier, titleHeight: Dp = 40.dp, movie: Mov
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             NetworkImage(
-                url = movie.poster,
-                placeHolder = { PosterImagePlaceholder() },
+                image = movie.posterPath,
+                placeHolder = { /*PosterImagePlaceholder()*/ },
                 error = { PosterImageError() },
                 contentDescription = stringResource(id = R.string.movie_image)
             )

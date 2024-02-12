@@ -2,7 +2,7 @@ package com.example.popcorntime.modules.movies_listing.data.repository
 
 import com.example.popcorntime.modules.movies_listing.data.data_source.remote.MoviesListDataSource
 import com.example.popcorntime.modules.movies_listing.data.mappers.toDomain
-import com.example.popcorntime.modules.movies_listing.data.models.MovieDataModel
+import com.example.popcorntime.modules.movies_listing.domain.models.MovieDomainModel
 import com.example.popcorntime.modules.movies_listing.domain.models.MoviesListPagingDomainModel
 import com.example.popcorntime.modules.movies_listing.domain.repository.MoviesListRepository
 import javax.inject.Inject
@@ -15,8 +15,13 @@ class MoviesListRepositoryImpl @Inject constructor(
         sortBy: String,
         language: String,
         page: Int
-    ): List<MovieDataModel> {
-        return dataSource.getMovies(sortBy, language, page).movies
+    ): List<MovieDomainModel>? {
+        return dataSource.getMovies(
+            sortBy,
+            language,
+            page
+        )
+            .movies?.map { it.toDomain() }
     }
 
     override suspend fun getPaginatedMovies(
@@ -24,15 +29,27 @@ class MoviesListRepositoryImpl @Inject constructor(
         language: String,
         page: Int
     ): MoviesListPagingDomainModel {
-        return dataSource.getMovies(sortBy, language, page).toDomain()
+        return dataSource.getMovies(
+            sortBy,
+            language,
+            page
+        )
+            .toDomain()
     }
 
     override suspend fun searchMovies(
         query: String,
         language: String,
         page: Int
-    ): List<MovieDataModel> {
-        return dataSource.movieSearch(query, language, page).movies
+    ): List<MovieDomainModel>? {
+        return dataSource
+            .movieSearch(
+                query,
+                language,
+                page
+            )
+            .movies
+            ?.map { it.toDomain() }
     }
 
     override suspend fun searchPaginatedMovies(
@@ -40,6 +57,11 @@ class MoviesListRepositoryImpl @Inject constructor(
         language: String,
         page: Int
     ): MoviesListPagingDomainModel {
-        return dataSource.movieSearch(query, language, page).toDomain()
+        return dataSource.movieSearch(
+            query,
+            language,
+            page
+        )
+            .toDomain()
     }
 }

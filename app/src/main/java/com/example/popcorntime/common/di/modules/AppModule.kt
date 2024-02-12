@@ -4,7 +4,7 @@ package com.example.popcorntime.common.di.modules
 import android.app.Application
 import android.content.Context
 import com.example.popcorntime.BuildConfig
-import com.example.popcorntime.common.constants.ApiConstants.BASE_URL
+import com.example.popcorntime.common.data.constants.ApiConstants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

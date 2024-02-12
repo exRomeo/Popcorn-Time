@@ -1,6 +1,6 @@
 package com.example.popcorntime.modules.movies_listing.domain.repository
 
-import com.example.popcorntime.modules.movies_listing.data.models.MovieDataModel
+import com.example.popcorntime.modules.movies_listing.domain.models.MovieDomainModel
 import com.example.popcorntime.modules.movies_listing.domain.models.MoviesListPagingDomainModel
 
 interface MoviesListRepository {
@@ -8,7 +8,7 @@ interface MoviesListRepository {
         sortBy: String,
         language: String,
         page: Int
-    ): List<MovieDataModel>
+    ): List<MovieDomainModel>?
 
     suspend fun getPaginatedMovies(
         sortBy: String,
@@ -20,7 +20,7 @@ interface MoviesListRepository {
         query: String,
         language: String,
         page: Int
-    ): List<MovieDataModel>
+    ): List<MovieDomainModel>?
 
     suspend fun searchPaginatedMovies(
         query: String,

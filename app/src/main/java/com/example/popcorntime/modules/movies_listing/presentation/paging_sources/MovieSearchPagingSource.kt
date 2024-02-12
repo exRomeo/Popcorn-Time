@@ -2,59 +2,66 @@ package com.example.popcorntime.modules.movies_listing.presentation.paging_sourc
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.popcorntime.common.constants.ApiConstants.STARTING_PAGE
+import com.example.popcorntime.common.data.constants.ApiConstants.STARTING_PAGE
+import com.example.popcorntime.common.presentation.extentions.orElse
+import com.example.popcorntime.common.presentation.models.Language
 import com.example.popcorntime.modules.movies_listing.domain.usecase.SearchMoviesPaginatedUseCase
 import com.example.popcorntime.modules.movies_listing.presentation.mappers.toUI
 import com.example.popcorntime.modules.movies_listing.presentation.models.MovieUIModel
-import com.example.popcorntime.common.presentation.models.Language
 
 class MovieSearchPagingSource(
+    private val searchMoviesUseCase: SearchMoviesPaginatedUseCase,
     private val query: String,
     private val language: Language,
-    private val searchMoviesUseCase: SearchMoviesPaginatedUseCase
-) :
-    PagingSource<Int, MovieUIModel>() {
+    private val onClick: (MovieUIModel) -> Unit
+) : PagingSource<Int, MovieUIModel>() {
 
-    override fun getRefreshKey(state: PagingState<Int, MovieUIModel>): Int? {
-        return state.anchorPosition?.let { position ->
-            val page = state.closestPageToPosition(position)
-            page?.prevKey?.minus(1) ?: page?.nextKey?.plus(1)
-        }
-    }
+    private val STARTING_KEY = STARTING_PAGE
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieUIModel> {
         return try {
-            val start = params.key ?: STARTING_PAGE
-            val response =
-                searchMoviesUseCase(
-                    query = query,
-                    language = language.value,
-                    page = start
-                ).toUI()
+            val start = params.key ?: STARTING_KEY
+            val response = searchMoviesUseCase(
+                query = query,
+                language = language.value,
+                page = start
+            ).toUI(onClick = onClick)
 
             LoadResult.Page(
-                data = response.movies,
+                data = response.movies.orEmpty(),
                 prevKey = calculatePrevKey(start),
-                nextKey = calculateNextKey(start, response.totalPages)
+                nextKey = calculateNextKey(
+                    start,
+                    response.totalPages
+                )
             )
 
         } catch (throwable: Throwable) {
             LoadResult.Error(throwable)
         }
+    }
 
+    override fun getRefreshKey(state: PagingState<Int, MovieUIModel>): Int? {
+        return state.anchorPosition?.let { position ->
+            val page = state.closestPageToPosition(position)
+            page?.prevKey?.minus(1).ensureValidKey { it >= STARTING_KEY }
+                ?: page?.nextKey?.plus(1)
+        }
     }
 
     private fun calculatePrevKey(start: Int): Int? {
         return when (start) {
-            STARTING_PAGE -> null
-            else -> start - 1
+            STARTING_KEY -> null
+            else -> start.minus(1).ensureValidKey(STARTING_KEY) { it > STARTING_KEY }
         }
     }
 
-    private fun calculateNextKey(start: Int, totalPages: Int): Int? {
-        return when {
-            start < totalPages -> start + 1
-            else -> null
-        }
+    private fun calculateNextKey(start: Int, totalPages: Int?): Int? {
+        return start.plus(1).ensureValidKey { it <= totalPages.orElse(0) }
+    }
+
+    private fun <T> T?.ensureValidKey(backup: T? = null, predicate: (T) -> Boolean): T? {
+        if (this == null) return backup
+        return if (predicate(this)) this else backup
     }
 }

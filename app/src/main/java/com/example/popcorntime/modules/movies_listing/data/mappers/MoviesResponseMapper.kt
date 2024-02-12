@@ -6,7 +6,7 @@ import com.example.popcorntime.modules.movies_listing.domain.models.MoviesListPa
 fun MoviesResponse.toDomain(): MoviesListPagingDomainModel {
     return MoviesListPagingDomainModel(
         page = page,
-        movies = movies.map { it.toDomain() },
+        movies = movies?.map { it.toDomain() },
         totalPages = totalPages,
         totalResults = totalResults
     )
