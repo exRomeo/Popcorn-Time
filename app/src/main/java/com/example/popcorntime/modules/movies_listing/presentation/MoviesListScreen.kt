@@ -122,34 +122,33 @@ fun MovieGrid(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(movies.itemCount, key = movies.itemKey { it.uniqueId }) {
-            val movie = remember(it) { movies[it] }
-            movie?.let {
+            movies[it]?.let { movie ->
                 MovieCard(
                     Modifier.clickable(onClick = { movie.onClick?.invoke() }), movie = movie
                 )
             }
         }
-        /*        item {
-                    when (movies.loadState.append) {
-                        is LoadState.Error -> {
-                            MovieCardPlaceholder(
-                                Modifier.padding(4.dp),
-                                stringResource(id = R.string.not_connected),
-                                animation = R.raw.no_internet_connection
-                            )
-                        }
+/*        item(span = { GridItemSpan(3) }) {
+            when (movies.loadState.append) {
+                is LoadState.Error -> {
+                    MovieCardPlaceholder(
+                        Modifier.padding(4.dp),
+                        stringResource(id = R.string.not_connected),
+                        animation = R.raw.no_internet_connection
+                    )
+                }
 
-                        LoadState.Loading -> {
-                            AnimatedShimmer {
-                                MovieCardPlaceholder(
-                                    Modifier.padding(4.dp), brush = it
-                                )
-                            }
-                        }
-
-                        is LoadState.NotLoading -> Unit
+                LoadState.Loading -> {
+                    AnimatedShimmer {
+                        MovieCardPlaceholder(
+                            Modifier.padding(4.dp), brush = it
+                        )
                     }
-                }*/
+                }
+
+                is LoadState.NotLoading -> Unit
+            }
+        }*/
     }
 
 }

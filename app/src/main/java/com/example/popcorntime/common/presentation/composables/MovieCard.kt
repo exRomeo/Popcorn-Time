@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -49,28 +48,23 @@ fun MovieCard(modifier: Modifier = Modifier, titleHeight: Dp = 40.dp, movie: Mov
         Column(modifier = Modifier.fillMaxSize()) {
             NetworkImage(
                 image = movie.posterPath,
-                placeHolder = { /*PosterImagePlaceholder()*/ },
-                error = { PosterImageError() },
-                contentDescription = stringResource(id = R.string.movie_image)
+                placeHolder = R.drawable.error_placeholder,
+                error = R.drawable.error_placeholder,
             )
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(titleHeight)
+                    .height(titleHeight),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(0.9f),
-                        text = movie.title ?: "N/A",
-                        style = TextStyle(textAlign = TextAlign.Center),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                Text(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    text = movie.title ?: "N/A",
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
