@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Popcorn Time"
-include ':app'
+include(":app")

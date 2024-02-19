@@ -45,8 +45,7 @@ class MoviePagingSource(
     override fun getRefreshKey(state: PagingState<Int, MovieUIModel>): Int? {
         return state.anchorPosition?.let { position ->
             val page = state.closestPageToPosition(position)
-            page?.prevKey?.minus(1).ensureValidKey { it >= STARTING_KEY }
-                ?: page?.nextKey?.plus(1)
+            page?.prevKey?.plus(1) ?: page?.nextKey?.minus(1)
         }
     }
 
